@@ -13,10 +13,82 @@ class Stylist(db.Model):
     stylist_name = db.Column(db.String(30), nullable=False)
     stylist_contact_num = db.Column(db.Integer, nullable=False)
 
-    apmnts = db.relationship('Appointment', back_populates='my_stylist')
+    appts = db.relationship('Appointment', back_populates='my_stylist')
 
     def __repr__(self):
         """Show info about a stylist"""
         return f"<Stylist id={self.stylist_id}, name={self.stylist_name}, contact={self.stylist_contact_num}>"
+
+
+class Customer(db.Model):
+    """A person receiving a service"""
+
+    __tablename__ = 'customers'
+
+    customer_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    first_name = db.Column(db.String(25), nullable=False)
+    last_name = db.Column(db.String(25), nullable=False)
+    text_num = db.Column(db.Integer)
+    calls_only_num = db.Column(db.Integer)
+    customer_email = db.Column(db.String(50))
+
+    appts = db.relationship('Appointment', back_populates='customer')
+
+    def __repr__(self):
+        """Show info about a customer"""
+        return f"<Customer id={self.customer_id}, first name={self.first_name}, text={self.text_num}>"
+
+
+class Appointment(db.Model):
+    """A scheduled event"""
+
+    __tablename__ = "appointments"
+
+    appoint_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    cust_id = db.Column(db.Integer, db.ForeignKey('customers.customer_id'), nullable=False)
+    stylist_id = db.Column(db.Integer, db.ForeignKey('stylists.stylist_id'))
+    gen_service = db.Column(db.String(25), nullable=False)
+    specific_service = db.Column(db.String(50))
+    date = db.Column(db.Date, nullable=False)
+    time = db.Column(db.Datetime, nullable=False)
+    duration = db.Column(db.Time)
+    is_canceled = db.Column(db.Boolean)
+
+    my_stylist = db.relationship('Stylist', back_populates='appts')
+    customer = db.relationship('Customer', back_populates='appts')
+    remind = db.relationship('Reminder', back_populates='appts')
+
+    def __repr__(self):
+        """Show info about an appointment"""
+        return f"<Appointment id={self.appoint_id}, service={self.gen_service}, date={self.date}>"
+
+
+class Reminder(db.Model):
+    """A customized message to remind a customer of an appointment"""
+
+    __tablename__ = 'reminders'
+
+    remind_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    appt_id = db.Column(db.Integer, db.ForeignKey('appointments.appoint_id'), nullable=False)
+    body_1 = db.Column(db.Text)
+    when_send1 = db.Column(db.Datetime)
+    body_2 = db.Column(db.Text)
+    when_send2 = db.Column(db.Datetime)
+    is_canceled = db.Column(db.Boolean)
+
+    appts = db.relationship('Appointment', back_populates='remind')
+
+    def __repr__(self):
+        """Shows a reminder"""
+        return f"<Reminder id={self.remind_id}, send={self.when_send1}>"
+
+
+
+
+
+
+
+
+
 
 
