@@ -4,6 +4,18 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+class Salon(db.Model):
+    """An app user that holds an account"""
+
+    __tablename__ = "users"
+
+    salon_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    salon_email = db.Column(db.String(50), nullable=False)
+    salon_name = db.Column(db.String(50))
+    password = db.Column(db.String(25), nullable=False)
+
+    employees = db.relationship("Stylist", back_populates='salon')
+
 class Stylist(db.Model):
     """A person serving appointments"""
 
@@ -13,6 +25,7 @@ class Stylist(db.Model):
     stylist_name = db.Column(db.String(30), nullable=False)
     stylist_contact_num = db.Column(db.Integer, nullable=False)
 
+    salon = db.relationship('Salon', back_populates='employees')
     appts = db.relationship('Appointment', back_populates='my_stylist')
 
     def __repr__(self):
