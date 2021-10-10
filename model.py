@@ -50,7 +50,10 @@ class Customer(db.Model):
 
     def __repr__(self):
         """Show info about a customer"""
-        return f"<Customer id={self.customer_id}, first name={self.first_name}, text={self.text_num}>"
+        return f"<Customer id={self.customer_id}, 
+                first name={self.first_name}, 
+                text={self.text_num}, 
+                email={self.customer_email}>"
 
 
 class Appointment(db.Model):
@@ -63,8 +66,8 @@ class Appointment(db.Model):
     stylist_id = db.Column(db.Integer, db.ForeignKey('stylists.stylist_id'))
     gen_service = db.Column(db.String(25), nullable=False)
     specific_service = db.Column(db.String(50))
-    date = db.Column(db.Date, nullable=False)
-    time = db.Column(db.Time, nullable=False)
+    date = db.Column(db.Date)
+    time = db.Column(db.Time)
     duration = db.Column(db.Interval)
     is_canceled = db.Column(db.Boolean)
 

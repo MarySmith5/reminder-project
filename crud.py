@@ -43,6 +43,12 @@ def create_customer(first_name,
     return customer
 
 
+def get_cust_id(first_name, last_name):
+    """Find a customer's id by name"""
+
+    return Customer.query.filter_by(first_name=first_name, last_name=last_name).all()
+
+
 def create_appointment(customer, 
                        stylist, 
                        gen_service,
@@ -66,6 +72,12 @@ def create_appointment(customer,
     db.session.commit()
 
     return appointment
+
+
+def get_appointment(customer):
+    """Finds and returns a specific appointment by customer and date""")
+
+    return Appointment.query.filter_by(cust_id='customer').all()
 
 
 def create_reminder(appt, 
