@@ -7,7 +7,7 @@ db = SQLAlchemy()
 class Salon(db.Model):
     """An app user that holds an account"""
 
-    __tablename__ = "users"
+    __tablename__ = "salons"
 
     salon_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     salon_email = db.Column(db.String(50), nullable=False)
@@ -24,6 +24,7 @@ class Stylist(db.Model):
     stylist_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     stylist_name = db.Column(db.String(30), nullable=False)
     stylist_contact_num = db.Column(db.Integer, nullable=False)
+    salon_id = db.Column(db.Integer, db.ForeignKey('salons.salon_id'))
 
     salon = db.relationship('Salon', back_populates='employees')
     appts = db.relationship('Appointment', back_populates='my_stylist')
@@ -67,7 +68,7 @@ class Appointment(db.Model):
     duration = db.Column(db.Interval)
     is_canceled = db.Column(db.Boolean)
 
-    my_stylist = db.relationship('Stylist', back_populates='appts')
+    stylist = db.relationship('Stylist', back_populates='appts')
     customer = db.relationship('Customer', back_populates='appts')
     remind = db.relationship('Reminder', back_populates='appts')
 
@@ -89,7 +90,7 @@ class Reminder(db.Model):
     when_send2 = db.Column(db.Datetime)
     is_canceled = db.Column(db.Boolean)
 
-    appts = db.relationship('Appointment', back_populates='remind')
+    appt = db.relationship('Appointment', back_populates='remind')
 
     def __repr__(self):
         """Shows a reminder"""
