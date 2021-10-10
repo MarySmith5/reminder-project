@@ -43,6 +43,48 @@ def create_customer(first_name,
     return customer
 
 
-def create_appointment()
+def create_appointment(customer, 
+                       stylist, 
+                       gen_service,
+                       specific_service,
+                       date,
+                       time,
+                       duration,
+                       is_canceled=False):
+
+    """Create and return a new appointment"""
+
+    appointment = Appointment(customer=customer,  
+                              stylist=stylist, 
+                              gen_service=gen_service,
+                              specific_service=specific_service,
+                              date=date,
+                              time=time,
+                              duration=duration,
+                              is_canceled=is_canceled)
+    db.session.add(appointment)
+    db.session.commit()
+
+    return appointment
 
 
+def create_reminder(appt, 
+                    body_1, 
+                    when_send1, 
+                    body_2, 
+                    when_send2, 
+                    is_canceled=False):
+
+    """Create and return reminder"""
+    reminder = Reminder(appt=appt, 
+                    body_1=body_1, 
+                    when_send1=when_send1, 
+                    body_2=body_2, 
+                    when_send2=when_send2, 
+                    is_canceled=is_canceled)
+
+    db.session.add(reminder)
+    db.session.commit()
+
+    return reminder
+    
