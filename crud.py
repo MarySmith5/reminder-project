@@ -12,6 +12,11 @@ def create_salon(salon_name, salon_email, password):
     return user
 
 
+def get_salon_by_email(email):
+
+    return Salon.query.filter_by(salon_email=email).one()
+
+
 def create_stylist(stylist_name, stylist_contact_num, salon):
     """Create and return a new stylist"""
     stylist = Stylist(stylist_name=stylist_name, 
