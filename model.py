@@ -1,6 +1,7 @@
 """Models for reminder app"""
 
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -50,10 +51,7 @@ class Customer(db.Model):
 
     def __repr__(self):
         """Show info about a customer"""
-        return f"<Customer id={self.customer_id}, 
-                first name={self.first_name}, 
-                text={self.text_num}, 
-                email={self.customer_email}>"
+        return f"<Customer id={self.customer_id}, first name={self.first_name}, text={self.text_num}, email={self.customer_email}>"
 
 
 class Appointment(db.Model):
@@ -88,9 +86,9 @@ class Reminder(db.Model):
     remind_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     appt_id = db.Column(db.Integer, db.ForeignKey('appointments.appoint_id'), nullable=False)
     body_1 = db.Column(db.Text)
-    when_send1 = db.Column(db.Datetime)
+    when_send1 = db.Column(db.DateTime)
     body_2 = db.Column(db.Text)
-    when_send2 = db.Column(db.Datetime)
+    when_send2 = db.Column(db.DateTime)
     is_canceled = db.Column(db.Boolean)
 
     appt = db.relationship('Appointment', back_populates='remind')
