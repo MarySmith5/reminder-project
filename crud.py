@@ -2,6 +2,8 @@
 
 from model import db, Salon, Stylist, Customer, Appointment, Reminder, connect_to_db
 
+
+
 def create_salon(salon_name, salon_email, password):
     """Create and return a new user/salon"""
     user = Salon(salon_name=salon_name, salon_email=salon_email, password=password)
@@ -14,7 +16,7 @@ def create_salon(salon_name, salon_email, password):
 
 def get_salon_by_email(email):
 
-    return Salon.query.filter_by(salon_email=email).one()
+    return Salon.query.filter_by(salon_email == email).first()
 
 
 def create_stylist(stylist_name, stylist_contact_num, salon):
@@ -59,8 +61,8 @@ def create_appointment(customer,
                        gen_service,
                        specific_service,
                        date,
-                       time,
-                       duration,
+                       start_time,
+                       end_time,
                        is_canceled=False):
 
     """Create and return a new appointment"""
@@ -70,8 +72,8 @@ def create_appointment(customer,
                               gen_service=gen_service,
                               specific_service=specific_service,
                               date=date,
-                              time=time,
-                              duration=duration,
+                              start_time=start_time,
+                              end_time=end_time,
                               is_canceled=is_canceled)
     db.session.add(appointment)
     db.session.commit()
@@ -80,7 +82,7 @@ def create_appointment(customer,
 
 
 def get_appointment(customer):
-    """Finds and returns a specific appointment by customer and date""")
+    """Finds and returns a specific appointment by customer and date"""
 
     return Appointment.query.filter_by(cust_id='customer').all()
 

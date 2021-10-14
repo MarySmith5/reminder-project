@@ -19,6 +19,7 @@ def homepage():
 
 @app.route('/', methods=['POST'])
 def process_login():
+    """Checks if login info is in our database"""
 
     email = request.form.get('email')
    
@@ -37,5 +38,38 @@ def process_login():
 
     session['salon'] = salon.email
     
-    flash("You are now logged in!")
+    flash(f"Hi, {salon.salon_name}! You are now logged in.")
     return redirect('/appointments')
+
+
+@app.route('/signup', methods=['GET'])
+def signup():
+    """Renders the page to create an account"""
+
+    return render_template('signup.html')
+
+
+@app.route('/signup', methods=['POST'])
+def create_account():
+    """Creates a new salon/user and stores it in the database"""
+
+    salon_email = request.form.get('email')
+    salon_name = request.form .get('salon_name')
+    password = request.form.get('password')
+
+    user = crud.get_salon_by_email(email)
+
+    if user:
+        flash("Account already exists with that email. Try again.
+        return redirect('/signup')
+    else:
+        crud.create_salon(salon_name, salon_email, password)
+        flash("Account created! Please log in.")
+        return redirect('/')
+
+
+if __name__ == "__main__":
+    # DebugToolbarExtension(app)
+    connect_to_db(app)
+    app.run(host="0.0.0.0", debug=True)
+

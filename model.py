@@ -64,14 +64,14 @@ class Appointment(db.Model):
     stylist_id = db.Column(db.Integer, db.ForeignKey('stylists.stylist_id'))
     gen_service = db.Column(db.String(25), nullable=False)
     specific_service = db.Column(db.String(50))
-    date = db.Column(db.Date)
-    time = db.Column(db.Time)
-    duration = db.Column(db.Interval)
+    date = db.Column(db.DateTime)
+    start_time = db.Column(db.DateTime)
+    end_time = db.Column(db.DateTime)
     is_canceled = db.Column(db.Boolean)
 
-    stylist = db.relationship('Stylist', back_populates='appts')
+    my_stylist = db.relationship('Stylist', back_populates='appts')
     customer = db.relationship('Customer', back_populates='appts')
-    remind = db.relationship('Reminder', back_populates='appts')
+    remind = db.relationship('Reminder', back_populates='appt')
 
     def __repr__(self):
         """Show info about an appointment"""
