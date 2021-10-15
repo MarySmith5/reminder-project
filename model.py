@@ -47,7 +47,7 @@ class Customer(db.Model):
     calls_only_num = db.Column(db.Integer)
     customer_email = db.Column(db.String(50))
 
-    appts = db.relationship('Appointment', back_populates='customer')
+    appts = db.relationship('Appointment', back_populates='my_customer')
 
     def __repr__(self):
         """Show info about a customer"""
@@ -70,7 +70,7 @@ class Appointment(db.Model):
     is_canceled = db.Column(db.Boolean)
 
     my_stylist = db.relationship('Stylist', back_populates='appts')
-    customer = db.relationship('Customer', back_populates='appts')
+    my_customer = db.relationship('Customer', back_populates='appts')
     remind = db.relationship('Reminder', back_populates='appt')
 
     def __repr__(self):

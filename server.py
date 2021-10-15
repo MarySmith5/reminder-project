@@ -60,7 +60,7 @@ def create_account():
     user = crud.get_salon_by_email(email)
 
     if user:
-        flash("Account already exists with that email. Try again.
+        flash("Account already exists with that email. Try again.")
         return redirect('/signup')
     else:
         crud.create_salon(salon_name, salon_email, password)

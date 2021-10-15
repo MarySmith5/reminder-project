@@ -16,14 +16,14 @@ def create_salon(salon_name, salon_email, password):
 
 def get_salon_by_email(email):
 
-    return Salon.query.filter_by(salon_email == email).first()
+    return Salon.query.filter_by(salon_email = email).first()
 
 
-def create_stylist(stylist_name, stylist_contact_num, salon):
+def create_stylist(stylist_name, stylist_contact_num, salon_id):
     """Create and return a new stylist"""
     stylist = Stylist(stylist_name=stylist_name, 
                       stylist_contact_num=stylist_contact_num,
-                      salon=salon)
+                      salon_id=salon_id)
 
     db.session.add(stylist)
     db.session.commit()
@@ -56,8 +56,8 @@ def get_cust_id(first_name, last_name):
     return Customer.query.filter_by(first_name=first_name, last_name=last_name).all()
 
 
-def create_appointment(customer, 
-                       stylist, 
+def create_appointment(customer_id, 
+                       stylist_id, 
                        gen_service,
                        specific_service,
                        date,
@@ -67,8 +67,8 @@ def create_appointment(customer,
 
     """Create and return a new appointment"""
 
-    appointment = Appointment(customer=customer,  
-                              stylist=stylist, 
+    appointment = Appointment(customer_id=customer_id,  
+                              stylist_id=stylist_id, 
                               gen_service=gen_service,
                               specific_service=specific_service,
                               date=date,
@@ -87,7 +87,7 @@ def get_appointment(customer):
     return Appointment.query.filter_by(cust_id='customer').all()
 
 
-def create_reminder(appt, 
+def create_reminder(appt_id, 
                     body_1, 
                     when_send1, 
                     body_2, 
@@ -95,7 +95,7 @@ def create_reminder(appt,
                     is_canceled=False):
 
     """Create and return reminder"""
-    reminder = Reminder(appt=appt, 
+    reminder = Reminder(appt_id=appt_id, 
                     body_1=body_1, 
                     when_send1=when_send1, 
                     body_2=body_2, 
