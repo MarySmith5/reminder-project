@@ -36,7 +36,7 @@ def process_login():
         return redirect('/')
 
 
-    session['salon'] = salon.email
+    session['salon'] = salon.salon_email
     
     flash(f"Hi, {salon.salon_name}! You are now logged in.")
     return redirect('/appointments')
