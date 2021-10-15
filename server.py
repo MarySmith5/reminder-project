@@ -57,7 +57,7 @@ def create_account():
     salon_name = request.form .get('salon_name')
     password = request.form.get('password')
 
-    user = crud.get_salon_by_email(email)
+    user = crud.get_salon_by_email(salon_email)
 
     if user:
         flash("Account already exists with that email. Try again.")
