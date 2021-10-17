@@ -1,48 +1,33 @@
 """Crud operations"""
 
-from model import db, Salon, Stylist, Customer, Appointment, Reminder, connect_to_db
+from model import db, Customer, Appointment, connect_to_db
 
 
 
-def create_salon(salon_name, salon_email, password):
-    """Create and return a new user/salon"""
-    user = Salon(salon_name=salon_name, salon_email=salon_email, password=password)
+# def create_stylist(stylist_name, stylist_contact_num, salon_id):
+#     """Create and return a new stylist"""
+#     stylist = Stylist(stylist_name=stylist_name, 
+#                       stylist_contact_num=stylist_contact_num,
+#                       salon_id=salon_id)
 
-    db.session.add(user)
-    db.session.commit()
+#     db.session.add(stylist)
+#     db.session.commit()
 
-    return user
-
-
-def get_salon_by_email(email):
-
-    return Salon.query.filter_by(salon_email = email).first()
-
-
-def create_stylist(stylist_name, stylist_contact_num, salon_id):
-    """Create and return a new stylist"""
-    stylist = Stylist(stylist_name=stylist_name, 
-                      stylist_contact_num=stylist_contact_num,
-                      salon_id=salon_id)
-
-    db.session.add(stylist)
-    db.session.commit()
-
-    return stylist
+#     return stylist
 
 
 def create_customer(first_name, 
                    last_name, 
-                   text_num, 
-                   calls_only_num, 
-                   customer_email):
+                   text_num=None, 
+                   landline=None, 
+                   email=None):
     """Create and return a new customer"""
 
     customer = Customer(first_name=first_name, 
                         last_name=last_name, 
                         text_num=text_num, 
-                        calls_only_num=calls_only_num, 
-                        customer_email=customer_email)
+                        landline=landline, 
+                        email=email)
 
     db.session.add(customer)
     db.session.commit()
@@ -50,30 +35,42 @@ def create_customer(first_name,
     return customer
 
 
-def get_cust_id(first_name, last_name):
-    """Find a customer's id by name"""
-
+def get_cust(first_name, last_name):
+    """Find a customer by name"""
     return Customer.query.filter_by(first_name=first_name, last_name=last_name).all()
 
 
-def create_appointment(customer_id, 
-                       stylist_id, 
+def get_cust_id(first_name, last_name):
+    """Find a customer's id by first and last name"""
+
+    return db.session.query(Customer.customer_id).filter_by(first_name=first_name, last_name=last_name).all()
+    
+
+
+def create_appointment(customer_id,  
                        gen_service,
                        specific_service,
                        date,
                        start_time,
                        end_time,
+                       body_1, 
+                       when_send1, 
+                       body_2, 
+                       when_send2,
                        is_canceled=False):
 
     """Create and return a new appointment"""
 
-    appointment = Appointment(customer_id=customer_id,  
-                              stylist_id=stylist_id, 
+    appointment = Appointment(customer_id=customer_id,   
                               gen_service=gen_service,
                               specific_service=specific_service,
                               date=date,
                               start_time=start_time,
                               end_time=end_time,
+                              body_1=body_1, 
+                              when_send1=when_send1, 
+                              body_2=body_2,
+                              when_send2=when_send2,
                               is_canceled=is_canceled)
     db.session.add(appointment)
     db.session.commit()
@@ -81,31 +78,31 @@ def create_appointment(customer_id,
     return appointment
 
 
-def get_appointment(customer):
+def get_appointment(customer_id):
     """Finds and returns a specific appointment by customer and date"""
 
-    return Appointment.query.filter_by(cust_id='customer').all()
+    return Appointment.query.filter_by(customer_id='customer_id').all()
 
 
-def create_reminder(appt_id, 
-                    body_1, 
-                    when_send1, 
-                    body_2, 
-                    when_send2, 
-                    is_canceled=False):
+# def create_reminder(appt_id, 
+#                     body_1, 
+#                     when_send1, 
+#                     body_2, 
+#                     when_send2, 
+#                     is_canceled=False):
 
-    """Create and return reminder"""
-    reminder = Reminder(appt_id=appt_id, 
-                    body_1=body_1, 
-                    when_send1=when_send1, 
-                    body_2=body_2, 
-                    when_send2=when_send2, 
-                    is_canceled=is_canceled)
+#     """Create and return reminder"""
+#     reminder = Reminder(appt_id=appt_id, 
+#                     body_1=body_1, 
+#                     when_send1=when_send1, 
+#                     body_2=body_2, 
+#                     when_send2=when_send2, 
+#                     is_canceled=is_canceled)
 
-    db.session.add(reminder)
-    db.session.commit()
+#     db.session.add(reminder)
+#     db.session.commit()
 
-    return reminder
+#     return reminder
 
 
 
