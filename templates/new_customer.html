@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}Reminders Home{% endblock %}
+
+{% block body %}
+<h1>Create a New Customer</h1>
+<form class="form-signup" method="POST" action="/">
+
+    <h2 class="form-signin-heading">Please Enter the Following Info</h2>
+
+        <div class="form-group">
+            <label for="first_name-field" class="sr-only">First Name</label>
+            <input type="first_name"
+                   name="first_name"
+                   class="form-control input-lg"
+                   placeholder="first name"
+                   required
+                   autofocus>
+          </div>
+  
+    <div class="form-group">
+      <label for="last_name-field" class="sr-only">Last Name</label>
+      <input type="last_name"
+             name="last_name"
+             class="form-control input-lg"
+             placeholder="last name"
+             required
+             autofocus>
+    </div>
+
+    <div class="form-group">
+      <label for="text_num-field" class="sr-only">Text Number</label>
+      <input type="text_num"
+             name="text_num"
+             class="form-control input-lg"
+             placeholder="text number"
+             required
+             autofocus>
+    </div>
+    <div class="form-group">
+        <label for="landline-field" class="sr-only">Landline</label>
+        <input type="landline"
+               name="landline"
+               class="form-control input-lg"
+               placeholder="landline number"
+               required
+               autofocus>
+      </div>
+  
+    <div class="form-group">
+      <label for="email-field" class="sr-only">Email</label>
+      <input type="email"
+             name="email"
+             class="form-control input-lg"
+             placeholder="email"
+             required>
+    </div>
+  
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Create Account
+    </button>
+  
+  </form>
+       
+  </body>
+  </html>
+  
+
+{% endblock %}
