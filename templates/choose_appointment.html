@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Choose an appointment{% endblock %} 
+
+{% block body %}
+  <h1>Select an appointment to alter:</h1>
+  
+    <ul>
+      {% for appt in appts %}
+        <li>
+            <a href="/appts/{{appt.appoint_id}}">{{appt}}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  <div>
+      <a href='/add_appointment'>CLICK HERE TO ADD A NEW APPOINTMENT</a>
+  </div>
+
+{% endblock %}

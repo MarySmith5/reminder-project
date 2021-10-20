@@ -79,7 +79,7 @@ def process_new_customer():
     email = request.form.get('email')
 
     customer = crud.create_customer(first_name, last_name, text_num, landline, email)
-    return redirect('/customer_options')
+    return redirect('/add_appointment', customer_id=customer.customer_id)
 
 
 @app.route('/customer_options', methods=['POST'])
@@ -93,6 +93,16 @@ def find_customer():
     else:
         flash(f"There are no customers named {first_name} {last_name}.")
         return redirect('/customer_options')
+
+
+@app.route("/customers/<customer_id>")
+def view_customer_appointments(customer_id):
+    
+    appts = crud.get_appointment(customer_id)
+    
+    return render_template('choose_appointment.html', appts=appts)
+   
+
 
 
 

@@ -1,11 +1,28 @@
 {% extends 'base.html' %}
-{% block title %}New Customer{% endblock %}
+{% block title %}New Appointment{% endblock %}
 
 {% block body %}
-<h1>Create a New Customer</h1>
-<form class="form-customer-signup" method="POST" action="/new_customer">
+<h1>Create a New Appointment</h1>
+<form class="form-new-appointment" method="POST" action="/process_new_appt">
 
-    <h2 class="form-customer-signup-heading">Please Enter the Following Info</h2>
+    <h2 class="form-new-appointment-heading">Please Enter the Following Info</h2>
+    <div class="form-group">
+        <label for="cust_id">This is your customer ID:</label>
+            <select name="cust_id" id="cust_id">
+                <option value="customer_id" >{{customer_id}}</option>
+            </select> 
+    </div>
+    <div class="form-group">
+        <label for="gen_service">Choose the type of service:</label>
+            <select name="gen_service" id="gen_service">
+                <option value="hair" >hair</option>
+                <option value="nail" >nail</option>
+                <option value="pedicure" >pedicure</option>
+                <option value="wax" >wax</option>
+                <option value="facial" >facial</option>
+                <option value="massage" >massage</option>
+            </select> 
+    </div>
 
         <div class="form-group">
             <label for="first_name-field" class="sr-only">First Name</label>
