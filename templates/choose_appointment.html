@@ -12,7 +12,10 @@
       {% endfor %}
     </ul>
   <div>
-      <a href='/add_appointment'>CLICK HERE TO ADD A NEW APPOINTMENT</a>
+    <a href='/add_appointment/{{customer_id}}'>CLICK HERE TO ADD A NEW APPOINTMENT</a>
+  </div>
+  <div>
+    <a href='/customer_options'>CLICK HERE TO CHANGE CUSTOMERS</a>
   </div>
 
 {% endblock %}

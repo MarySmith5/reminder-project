@@ -46,17 +46,21 @@ def get_cust_id(first_name, last_name):
     return db.session.query(Customer.customer_id).filter_by(first_name=first_name, last_name=last_name).all()
     
 
+def get_cust_fname(customer_id):
+    """Find a customer's first name by id"""
+    return db.session.query(Customer.first_name).filter_by(customer_id).one()
+    
 
 def create_appointment(customer_id,  
                        gen_service,
                        specific_service,
                        date,
                        start_time,
-                       end_time,
-                       body_1, 
-                       when_send1, 
-                       body_2, 
-                       when_send2,
+                       duration,
+                       body_1=None, 
+                       when_send1=None, 
+                       body_2=None, 
+                       when_send2=None,
                        is_canceled=False):
 
     """Create and return a new appointment"""
@@ -66,7 +70,7 @@ def create_appointment(customer_id,
                               specific_service=specific_service,
                               date=date,
                               start_time=start_time,
-                              end_time=end_time,
+                              duration=duration,
                               body_1=body_1, 
                               when_send1=when_send1, 
                               body_2=body_2,

@@ -1,79 +1,57 @@
 {% extends 'base.html' %}
 {% block title %}New Appointment{% endblock %}
+<head>
+    <script src="html-duration-picker.min.js"></script>
+  <!-- <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js" crossorigin></script> -->
+</head>
 
+<body>
 {% block body %}
 <h1>Create a New Appointment</h1>
 <form class="form-new-appointment" method="POST" action="/process_new_appt">
 
     <h2 class="form-new-appointment-heading">Please Enter the Following Info</h2>
     <div class="form-group">
-        <label for="cust_id">This is your customer ID:</label>
-            <select name="cust_id" id="cust_id">
-                <option value="customer_id" >{{customer_id}}</option>
-            </select> 
+        <p for="cust_id">This is your customer ID:</p>
+            <input value="{{customer_id}}" >{{customer_id}}</input>        
     </div>
-    <div class="form-group">
-        <label for="gen_service">Choose the type of service:</label>
-            <select name="gen_service" id="gen_service">
-                <option value="hair" >hair</option>
-                <option value="nail" >nail</option>
-                <option value="pedicure" >pedicure</option>
-                <option value="wax" >wax</option>
-                <option value="facial" >facial</option>
-                <option value="massage" >massage</option>
-            </select> 
-    </div>
-
         <div class="form-group">
-            <label for="first_name-field" class="sr-only">First Name</label>
-            <input type="first_name"
-                   name="first_name"
-                   class="form-control input-lg"
-                   placeholder="first name"
-                   required
-                   autofocus>
-          </div>
-  
-    <div class="form-group">
-      <label for="last_name-field" class="sr-only">Last Name</label>
-      <input type="last_name"
-             name="last_name"
-             class="form-control input-lg"
-             placeholder="last name"
-             required
-             autofocus>
+            <label for="gen_service">Choose the type of service:</label>
+                <select name="gen_service" id="gen_service">
+                    <option value="hair" >hair</option>
+                    <option value="nail" >nail</option>
+                    <option value="pedicure" >pedicure</option>
+                    <option value="wax" >wax</option>
+                    <option value="facial" >facial</option>
+                    <option value="massage" >massage</option>
+                </select> 
+        </div>
+        <div class="form-group">
+            <label for="specific_service-field" class="sr-only">Appointment Notes:</label>
+                <textarea type="specific_service"
+                    name="specific_service"
+                    class="form-control input-lg"
+                    placeholder="notes about service">
+        </div>
+        <div class="form-group">
+            <label for="date_field">Date:</label>
+                <input type="date" id="date" name="date">
+        </div>
+        <div class="form-group">
+            <label for="time">Select a time:</label>
+                <input type="time" id="time" name="time">
+        </div>
+        <div class="form-group">
+            <label for="time">Duration:</label>
+                <input class="html-duration-picker" data-hide-seconds data-duration="00:45:00">
+        </div>
     </div>
-
-    <div class="form-group">
-      <label for="text_num-field" class="sr-only">Text Number</label>
-      <input type="text_num"
-             name="text_num"
-             class="form-control input-lg"
-             placeholder="text number"
-             required
-             autofocus>
+    <div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Create Account
+        </button>
     </div>
-    <div class="form-group">
-        <label for="landline-field" class="sr-only">Landline</label>
-        <input type="landline"
-               name="landline"
-               class="form-control input-lg"
-               placeholder="landline number"
-               required
-               autofocus>
-      </div>
-  
-    <div class="form-group">
-      <label for="email-field" class="sr-only">Email</label>
-      <input type="email"
-             name="email"
-             class="form-control input-lg"
-             placeholder="email"
-             required>
-    </div>
-  
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Create Account
-    </button>
   
   </form>
        

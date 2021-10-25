@@ -3,6 +3,7 @@
 
 {% block body %}
 <h1>Create a New Customer</h1>
+<body>
 <form class="form-customer-signup" method="POST" action="/new_customer">
 
     <h2 class="form-customer-signup-heading">Please Enter the Following Info</h2>
@@ -14,7 +15,7 @@
                    class="form-control input-lg"
                    placeholder="first name"
                    required
-                   autofocus>
+                   >
           </div>
   
     <div class="form-group">
@@ -24,7 +25,7 @@
              class="form-control input-lg"
              placeholder="last name"
              required
-             autofocus>
+             >
     </div>
 
     <div class="form-group">
@@ -33,17 +34,14 @@
              name="text_num"
              class="form-control input-lg"
              placeholder="text number"
-             required
-             autofocus>
+             >
     </div>
     <div class="form-group">
         <label for="landline-field" class="sr-only">Landline</label>
         <input type="landline"
                name="landline"
                class="form-control input-lg"
-               placeholder="landline number"
-               required
-               autofocus>
+               placeholder="landline number">
       </div>
   
     <div class="form-group">
@@ -51,17 +49,16 @@
       <input type="email"
              name="email"
              class="form-control input-lg"
-             placeholder="email"
-             required>
+             placeholder="email">
     </div>
   
     <button class="btn btn-lg btn-primary btn-block" type="submit">Create Account
     </button>
   
-  </form>
-       
-  </body>
-  </html>
+</form>
+    
+</body>
+</html>
   
 
 {% endblock %}

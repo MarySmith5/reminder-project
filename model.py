@@ -56,11 +56,11 @@ class Appointment(db.Model):
     specific_service = db.Column(db.String(50))
     date = db.Column(db.DateTime, nullable=False)
     start_time = db.Column(db.DateTime, nullable=False)
-    end_time = db.Column(db.DateTime)
+    duration = db.Column(db.Interval)
     body_1 = db.Column(db.Text)
     when_send1 = db.Column(db.DateTime)
     body_2 = db.Column(db.Text)
-    when_send2 = db.Column(db.DateTime)
+    #hen_send2 = db.Column(db.DateTime)
     is_canceled = db.Column(db.Boolean)
 
     #my_stylist = db.relationship('Stylist', back_populates='appts')
