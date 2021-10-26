@@ -42,7 +42,6 @@ def get_cust(first_name, last_name):
 
 def get_cust_id(first_name, last_name):
     """Find a customer's id by first and last name"""
-
     return db.session.query(Customer.customer_id).filter_by(first_name=first_name, last_name=last_name).all()
     
 
@@ -54,8 +53,7 @@ def get_cust_fname(customer_id):
 def create_appointment(customer_id,  
                        gen_service,
                        specific_service,
-                       date,
-                       start_time,
+                       date_time,
                        duration,
                        body_1=None, 
                        when_send1=None, 
@@ -68,8 +66,7 @@ def create_appointment(customer_id,
     appointment = Appointment(customer_id=customer_id,   
                               gen_service=gen_service,
                               specific_service=specific_service,
-                              date=date,
-                              start_time=start_time,
+                              date_time=date_time,
                               duration=duration,
                               body_1=body_1, 
                               when_send1=when_send1, 
@@ -84,30 +81,17 @@ def create_appointment(customer_id,
 
 def get_appointment(customer_id):
     """Finds and returns a specific appointment by customer and date"""
-
     return Appointment.query.filter_by(customer_id='customer_id').all()
 
 
-# def create_reminder(appt_id, 
-#                     body_1, 
-#                     when_send1, 
-#                     body_2, 
-#                     when_send2, 
-#                     is_canceled=False):
+def get_appt_by_id(appoint_id):
+    """Finds and returns an appoinment by its id"""
+    return Appointment.query.filter_by(appoint_id='appoint_id').one()
 
-#     """Create and return reminder"""
-#     reminder = Reminder(appt_id=appt_id, 
-#                     body_1=body_1, 
-#                     when_send1=when_send1, 
-#                     body_2=body_2, 
-#                     when_send2=when_send2, 
-#                     is_canceled=is_canceled)
 
-#     db.session.add(reminder)
-#     db.session.commit()
-
-#     return reminder
-
+def get_cust_by_appt_id(appoint_id):
+    """Finds and returns a customer id by an appointment id."""
+    return db.session.query(Appointment.customer_id).filter_by(appoint_id).one()
 
 
 

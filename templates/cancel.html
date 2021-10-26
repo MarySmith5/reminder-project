@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Cancel an appointment{% endblock %} 
+
+{% block body %}
+  <h1>To make changes to this appointment, you must cancel it and create a new appointment.</h1>
+    <p>{{appointment}}</p>
+    <form class="form-cancel" method="POST" action="/canceled/{{appoint_id}}">
+        
+        <button class="btn btn-lg btn-primary btn-block" type="cancel">Cancel
+        </button>
+      </form>  
+  <div>
+    <a href='/add_appointment/{{customer_id}}'>CLICK HERE TO ADD A NEW APPOINTMENT FOR THIS CUSTOMER</a>
+  </div>
+  <div>
+    <a href='/customer_options'>CLICK HERE TO CHANGE CUSTOMERS</a>
+  </div>
+
+{% endblock %}

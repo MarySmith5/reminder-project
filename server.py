@@ -90,7 +90,6 @@ def find_customer():
     customers = crud.get_cust(first_name, last_name)
     if customers:
         return render_template('customers.html', customers=customers)
-
     else:
         flash(f"There are no customers named {first_name} {last_name}.")
         return redirect('/customer_options')
@@ -101,16 +100,14 @@ def view_customer_appointments(customer_id):
     """Shows all existing appointments of a customer"""
     customer_id =customer_id
     appts = crud.get_appointment(customer_id)
-    
     return render_template('choose_appointment.html', appts=appts, customer_id=customer_id)
 
 
 @app.route("/add_appointment/<customer_id>")
 def create_appt(customer_id):
     """Prepares date variables and renders the add_appointment template"""
-    customer_id = customer_id
-
     return render_template('add_appointment.html', customer_id=customer_id )
+
 
 @app.route("/add_appointment/<customer_id>", methods=['POST'])
 def process_appt():
@@ -124,19 +121,18 @@ def process_appt():
    
     date = datetime.strptime(date_data, "%Y-%m-%d")
     time = datetime.strptime(time_data, "%H:%M")
-    combined = datetime. datetime. combine(date, time)
-    when_send1 = combined + timedelta(days=-1)
+    date_time = datetime.combine(date, time)
+    when_send1 = date_time + timedelta(days=-1)
     first_name = crud.get_cust_fname(customer_id)
     body_1 = f"Hi, {first_name}! Remember your {gen_service} appointment tomorrow at {time_data}. \nIf this doesn't work, contact {session['stylist']} at {session['contact_number']}."
-    when_send2 = combined + timedelta(hours=-2)
+    when_send2 = date_time + timedelta(hours=-2)
     body_2 = f"Hi, {first_name}! Remember your {gen_service} appointment TODAY at {time_data}. \nIf this doesn't work, contact {session['stylist']} at {session['contact_number']}."
-    when_send2 = combined + timedelta(hours=-2)
+    when_send2 = date_time + timedelta(hours=-2)
 
     appt = crud.create_appointment(customer_id, 
                                    gen_service, 
                                    specific_service, 
-                                   date, 
-                                   time, 
+                                   date_time, 
                                    duration, 
                                    body_1, 
                                    when_send1,
@@ -145,6 +141,24 @@ def process_appt():
 
     flash(f"{first_name} has a {gen_service} appointment on {date_data} at {time_data}.")
     return render_template('choose_appointment.html', customer_id=customer_id)
+
+
+@app.route('/appts/<appoint_id>')
+def offer_cancel(appoint_id):
+    """Gives the option to cancel a specific appointment"""
+    appointment = crud.get_appt_by_id(appoint_id)
+    cust = crud.get_cust_by_appt_id(appoint_id)
+    return render_template('cancel.html', appointment=appointment, customer_id=cust)
+
+
+@app.route("/canceled/<appoint_id>")
+def cancel_appt(appoint_id):
+    """Marks an appointment as canceled"""
+    appointment = crud.get_appt_by_id(appoint_id)
+    appointment.is_canceled = True
+    flash(f"{appointment} is CANCELED.")
+    return redirect('/customer_options')
+
 
 
 
