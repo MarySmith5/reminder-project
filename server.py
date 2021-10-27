@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, flash, session, redirect
 from model import connect_to_db
 import crud
 from jinja2 import StrictUndefined
-from datetime import datetime, date, timedelta
+from datetime import datetime, date, timedelta, time
 
 app = Flask(__name__)
 app.secret_key = 'maryskey'
@@ -14,9 +14,8 @@ app.jinja_env.undefined = StrictUndefined
 @app.route('/')
 def show_homepage():
     """Renders the signup page"""
-    # if session['stylist'] --> KeyError if it doesn't exist
-    # if 'stylist' in session and session['stylist']
-    if not session.get('stylist'): # .get will default to None if the value isn't in the session
+    
+    if session.get('stylist'): 
         return redirect('/login')
     else:
         return render_template('signup.html')
@@ -25,7 +24,7 @@ def show_homepage():
 @app.route('/login', methods=['GET'])
 def show_login():
     """Renders the login page"""
-    if session.get("stylist"):
+    if not session.get("stylist"):
         return redirect('/')
 
     else:
@@ -78,9 +77,12 @@ def process_new_customer():
     text_num = request.form.get('text_num')
     landline = request.form.get('landline')
     email = request.form.get('email')
-
-    customer = crud.create_customer(first_name, last_name, text_num, landline, email)
-    return redirect('/add_appointment', customer_id=customer.customer_id)
+    if crud.check_existing_cust(first_name, last_name, text_num):
+        flash("This customer already exists.")
+        return redirect('/customer_options')
+    else:
+        customer = crud.create_customer(first_name, last_name, text_num, landline, email)
+        return redirect(f'/add_appointment/<{customer.customer_id}>')
 
 
 @app.route('/customer_options', methods=['POST'])
@@ -98,7 +100,7 @@ def find_customer():
 @app.route("/customers/<customer_id>")
 def view_customer_appointments(customer_id):
     """Shows all existing appointments of a customer"""
-    customer_id =customer_id
+    
     appts = crud.get_appointment(customer_id)
     return render_template('choose_appointment.html', appts=appts, customer_id=customer_id)
 
@@ -109,7 +111,7 @@ def create_appt(customer_id):
     return render_template('add_appointment.html', customer_id=customer_id )
 
 
-@app.route("/add_appointment/<customer_id>", methods=['POST'])
+@app.route("/process_new_appt", methods=['POST'])
 def process_appt():
     """Takes info from form and creates an appointment"""
     customer_id = request.form.get('customer_id')
@@ -118,10 +120,14 @@ def process_appt():
     date_data = request.form.get('date')
     time_data = request.form.get('time')
     duration = request.form.get('duration')
+
    
     date = datetime.strptime(date_data, "%Y-%m-%d")
+    d = datetime.date(date)
     time = datetime.strptime(time_data, "%H:%M")
-    date_time = datetime.combine(date, time)
+    t = datetime.time(time)
+    date_time = datetime.combine(d, t)
+    
     when_send1 = date_time + timedelta(days=-1)
     first_name = crud.get_cust_fname(customer_id)
     body_1 = f"Hi, {first_name}! Remember your {gen_service} appointment tomorrow at {time_data}. \nIf this doesn't work, contact {session['stylist']} at {session['contact_number']}."

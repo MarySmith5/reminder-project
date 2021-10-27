@@ -14,8 +14,8 @@ class Customer(db.Model):
     customer_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     first_name = db.Column(db.String(25), nullable=False)
     last_name = db.Column(db.String(25), nullable=False)
-    text_num = db.Column(db.Integer)
-    landline = db.Column(db.Integer)
+    text_num = db.Column(db.String(25))
+    landline = db.Column(db.String(25))
     email = db.Column(db.String(50))
 
     appts = db.relationship('Appointment', back_populates='my_customer')
@@ -33,7 +33,7 @@ class Appointment(db.Model):
     appoint_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     customer_id = db.Column(db.Integer, db.ForeignKey('customers.customer_id'), nullable=False)
     gen_service = db.Column(db.String(25), nullable=False)
-    specific_service = db.Column(db.String(50))
+    specific_service = db.Column(db.String(100))
     date_time = db.Column(db.DateTime, nullable=False)
     #start_time = db.Column(db.DateTime, nullable=False)
     duration = db.Column(db.Interval)
@@ -42,7 +42,7 @@ class Appointment(db.Model):
     body_2 = db.Column(db.Text)
     when_send2 = db.Column(db.DateTime)
     is_canceled = db.Column(db.Boolean)
-    my_customer = db.relationship('Customer', back_populates='appts')
+    my_customer = db.relationship("Customer", back_populates="appts")
     
     def __repr__(self):
         """Show info about an appointment"""
@@ -50,7 +50,7 @@ class Appointment(db.Model):
 
 
 
-def connect_to_db(flask_app, db_uri="postgresql:///reminders", echo=True):
+def connect_to_db(flask_app, db_uri="postgresql:///reminders", echo=False):
     flask_app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
     flask_app.config["SQLALCHEMY_ECHO"] = echo
     flask_app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False

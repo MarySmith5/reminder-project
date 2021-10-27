@@ -3,19 +3,6 @@
 from model import db, Customer, Appointment, connect_to_db
 
 
-
-# def create_stylist(stylist_name, stylist_contact_num, salon_id):
-#     """Create and return a new stylist"""
-#     stylist = Stylist(stylist_name=stylist_name, 
-#                       stylist_contact_num=stylist_contact_num,
-#                       salon_id=salon_id)
-
-#     db.session.add(stylist)
-#     db.session.commit()
-
-#     return stylist
-
-
 def create_customer(first_name, 
                    last_name, 
                    text_num=None, 
@@ -47,8 +34,15 @@ def get_cust_id(first_name, last_name):
 
 def get_cust_fname(customer_id):
     """Find a customer's first name by id"""
-    return db.session.query(Customer.first_name).filter_by(customer_id).one()
+    return db.session.query(Customer.first_name).filter_by(customer_id=customer_id).one()
     
+
+def check_existing_cust(first_name, last_name, text_num):
+    """Check to see if a customer already exists"""
+    return Customer.query.filter(Customer.first_name =='first_name', 
+                                 Customer.last_name =='last_name', 
+                                 Customer.text_num == 'text_num').first()  
+                                  
 
 def create_appointment(customer_id,  
                        gen_service,
