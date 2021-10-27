@@ -34,15 +34,14 @@ def get_cust_id(first_name, last_name):
 
 def get_cust_fname(customer_id):
     """Find a customer's first name by id"""
-    return db.session.query(Customer.first_name).filter_by(customer_id=customer_id).one()
-    
+    q = Customer.query.filter_by(customer_id=customer_id).one()
+    #return db.session.query(Customer.first_name).filter_by(customer_id=customer_id).one()
+    return q.first_name
 
 def check_existing_cust(first_name, last_name, text_num):
     """Check to see if a customer already exists"""
-    return Customer.query.filter(Customer.first_name =='first_name', 
-                                 Customer.last_name =='last_name', 
-                                 Customer.text_num == 'text_num').first()  
-                                  
+    return Customer.query.filter_by(first_name = first_name, last_name = last_name, text_num = text_num).first()  
+
 
 def create_appointment(customer_id,  
                        gen_service,
@@ -75,17 +74,17 @@ def create_appointment(customer_id,
 
 def get_appointment(customer_id):
     """Finds and returns a specific appointment by customer and date"""
-    return Appointment.query.filter_by(customer_id='customer_id').all()
+    return Appointment.query.filter_by(customer_id=customer_id).all()
 
 
 def get_appt_by_id(appoint_id):
     """Finds and returns an appoinment by its id"""
-    return Appointment.query.filter_by(appoint_id='appoint_id').one()
+    return Appointment.query.filter_by(appoint_id=appoint_id).one()
 
 
 def get_cust_by_appt_id(appoint_id):
     """Finds and returns a customer id by an appointment id."""
-    return db.session.query(Appointment.customer_id).filter_by(appoint_id).one()
+    return db.session.query(Appointment.customer_id).filter_by(appoint_id=appoint_id).one()
 
 
 

@@ -82,6 +82,7 @@ def process_new_customer():
         return redirect('/customer_options')
     else:
         customer = crud.create_customer(first_name, last_name, text_num, landline, email)
+        flash(f'{customer} has been added to the database.')
         return redirect(f'/add_appointment/<{customer.customer_id}>')
 
 
@@ -107,8 +108,8 @@ def view_customer_appointments(customer_id):
 
 @app.route("/add_appointment/<customer_id>")
 def create_appt(customer_id):
-    """Prepares date variables and renders the add_appointment template"""
-    return render_template('add_appointment.html', customer_id=customer_id )
+    """Renders the add_appointment template"""
+    return render_template('add_appointment.html', customer_id=customer_id)
 
 
 @app.route("/process_new_appt", methods=['POST'])
@@ -146,7 +147,7 @@ def process_appt():
                                    when_send2)
 
     flash(f"{first_name} has a {gen_service} appointment on {date_data} at {time_data}.")
-    return render_template('choose_appointment.html', customer_id=customer_id)
+    return render_template('another_appt.html', customer_id=customer_id)
 
 
 @app.route('/appts/<appoint_id>')
