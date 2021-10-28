@@ -35,7 +35,6 @@ def get_cust_id(first_name, last_name):
 def get_cust_fname(customer_id):
     """Find a customer's first name by id"""
     q = Customer.query.filter_by(customer_id=customer_id).one()
-    #return db.session.query(Customer.first_name).filter_by(customer_id=customer_id).one()
     return q.first_name
 
 def check_existing_cust(first_name, last_name, text_num):
@@ -84,7 +83,8 @@ def get_appt_by_id(appoint_id):
 
 def get_cust_by_appt_id(appoint_id):
     """Finds and returns a customer id by an appointment id."""
-    return db.session.query(Appointment.customer_id).filter_by(appoint_id=appoint_id).one()
+    c =Appointment.query.filter_by(appoint_id=appoint_id).one()
+    return c.my_customer.customer_id
 
 
 

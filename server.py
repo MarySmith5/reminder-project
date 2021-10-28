@@ -83,7 +83,7 @@ def process_new_customer():
     else:
         customer = crud.create_customer(first_name, last_name, text_num, landline, email)
         flash(f'{customer} has been added to the database.')
-        return redirect(f'/add_appointment/<{customer.customer_id}>')
+        return redirect(f'/add_appointment/{customer.customer_id}')
 
 
 @app.route('/customer_options', methods=['POST'])
@@ -147,7 +147,7 @@ def process_appt():
                                    when_send2)
 
     flash(f"{first_name} has a {gen_service} appointment on {date_data} at {time_data}.")
-    return render_template('another_appt.html', customer_id=customer_id)
+    return render_template('another_appt.html', customer_id=appt.customer_id)
 
 
 @app.route('/appts/<appoint_id>')
@@ -158,7 +158,7 @@ def offer_cancel(appoint_id):
     return render_template('cancel.html', appointment=appointment, customer_id=cust)
 
 
-@app.route("/canceled/<appoint_id>")
+@app.route("/canceled/<appoint_id>", methods=['POST'])
 def cancel_appt(appoint_id):
     """Marks an appointment as canceled"""
     appointment = crud.get_appt_by_id(appoint_id)
@@ -166,37 +166,6 @@ def cancel_appt(appoint_id):
     flash(f"{appointment} is CANCELED.")
     return redirect('/customer_options')
 
-
-
-
-
-# @app.route('/appointments')
-# def appointment_options():
-#     """Find an existing appointment or choose to create a new appointment."""
-#     return render_template('appt_opt.html')
-
-
-# @app.route('/show_appointments', methods=['POST'])
-# def show_appointments():
-#     """Shows list of appointments for given first and last customer name"""
-
-#     first_name = request.form.get('first_name')
-#     last_name = request.form.get('last_name')
-
-#     customers = crud.get_customers(first_name, last_name)
-#     if customers == None:
-#         flash("No customers exist by that name.")
-#         return redirect('new_appointment.html')
-
-#     else:
-#         return crud.get_appointment(cust_id)
-
-
-
-# @app.route('/make_appointment')
-# def add_appointment():
-    
-#     return render_template('new_appointment.html')
 
 
 

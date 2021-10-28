@@ -22,7 +22,7 @@ class Customer(db.Model):
 
     def __repr__(self):
         """Show info about a customer"""
-        return f"<Customer id={self.customer_id}, {self.first_name} {self.last_name},text={self.text_num}, landline={self.landline}, email={self.email}>"
+        return f"<Customer id={self.customer_id}, {self.first_name} {self.last_name}, text={self.text_num}, landline={self.landline}, email={self.email}>"
 
 
 class Appointment(db.Model):
@@ -46,7 +46,7 @@ class Appointment(db.Model):
     
     def __repr__(self):
         """Show info about an appointment"""
-        return f"<Appointment id={self.appoint_id}, service={self.gen_service}, date_time={self.date_time}>"
+        return f"< Appointment id={self.appoint_id}, service={self.gen_service}, date_time={self.date_time}, CANCELED={self.is_canceled} >"
 
 
 
