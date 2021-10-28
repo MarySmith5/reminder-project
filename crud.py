@@ -87,6 +87,13 @@ def get_cust_by_appt_id(appoint_id):
     return c.my_customer.customer_id
 
 
+def cancel_appt(appoint_id):
+    """Marks appointment as canceled"""
+    a = Appointment.query.filter_by(appoint_id=appoint_id).one()
+    a.is_canceled = True
+    db.session.commit()
+    return a
+
 
 if __name__ == '__main__':
     from server import app

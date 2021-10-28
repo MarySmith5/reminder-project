@@ -161,8 +161,7 @@ def offer_cancel(appoint_id):
 @app.route("/canceled/<appoint_id>", methods=['POST'])
 def cancel_appt(appoint_id):
     """Marks an appointment as canceled"""
-    appointment = crud.get_appt_by_id(appoint_id)
-    appointment.is_canceled = True
+    appointment = crud.cancel_appt(appoint_id)
     flash(f"{appointment} is CANCELED.")
     return redirect('/customer_options')
 
