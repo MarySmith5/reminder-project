@@ -1,14 +1,24 @@
 """Server for appointment reminder app."""
-
+import arrow
 from flask import Flask, render_template, request, flash, session, redirect
+# from flask_migrate import Migrate
+from celery import Celery
 from model import connect_to_db
+import tasks
 import crud
 from jinja2 import StrictUndefined
 from datetime import datetime, date, timedelta, time
+import os
 
 app = Flask(__name__)
 app.secret_key = 'maryskey'
 app.jinja_env.undefined = StrictUndefined
+
+app.config['CELERY_BROKER_URL'] = 'redis://localhost:6379/0'
+app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
+
+celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
+celery.conf.update(app.config)
 
 # Falsey: False, None, "", [], {}, ()
 @app.route('/')
@@ -53,6 +63,7 @@ def create_account():
     session['business_name'] = request.form .get('business')
     session['contact_number'] = request.form.get('contact')
     session['password'] = request.form.get('password')
+    session['timezone'] = request.form.get('timezone')
 
     return redirect("/login")
     
@@ -127,15 +138,13 @@ def process_appt():
     d = datetime.date(date)
     time = datetime.strptime(time_data, "%H:%M")
     t = datetime.time(time)
-    date_time = datetime.combine(d, t)
-    
-    when_send1 = date_time + timedelta(days=-1)
+    date_time = arrow.get(datetime.combine(d, t), session['timezone']).to('utc').naive
     first_name = crud.get_cust_fname(customer_id)
-    body_1 = f"Hi, {first_name}! Remember your {gen_service} appointment tomorrow at {time_data}. \nIf this doesn't work, contact {session['stylist']} at {session['contact_number']}."
+    when_send1 = date_time + timedelta(days=-1)
+    body_1 = f"Hi, {first_name}! Remember your {gen_service} appointment tomorrow at {time_data.format('h:mm a')}. \nIf this doesn't work, contact {session['stylist']} at {session['contact_number']}."
     when_send2 = date_time + timedelta(hours=-2)
-    body_2 = f"Hi, {first_name}! Remember your {gen_service} appointment TODAY at {time_data}. \nIf this doesn't work, contact {session['stylist']} at {session['contact_number']}."
-    when_send2 = date_time + timedelta(hours=-2)
-
+    body_2 = f"Hi, {first_name}! Remember your {gen_service} appointment TODAY at {time_data.format('h:mm a')}. \nIf this doesn't work, contact {session['stylist']} at {session['contact_number']}."
+    
     appt = crud.create_appointment(customer_id, 
                                    gen_service, 
                                    specific_service, 
@@ -146,7 +155,7 @@ def process_appt():
                                    body_2,
                                    when_send2)
 
-    flash(f"{first_name} has a {gen_service} appointment on {date_data} at {time_data}.")
+    flash(f"{first_name} has a {gen_service} appointment on {date_data} at {time_data.format('h:mm a')}.")
     return render_template('another_appt.html', customer_id=appt.customer_id)
 
 

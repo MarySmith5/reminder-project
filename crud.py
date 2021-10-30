@@ -1,7 +1,8 @@
 """Crud operations"""
 
 from model import db, Customer, Appointment, connect_to_db
-
+import tasks
+from datetime import datetime
 
 def create_customer(first_name, 
                    last_name, 
@@ -67,6 +68,12 @@ def create_appointment(customer_id,
                               is_canceled=is_canceled)
     db.session.add(appointment)
     db.session.commit()
+    if appointment.my_customer.text_num:
+        tasks.send_sms_reminder().apply_async(
+                    args=[appointment.appoint_id], eta=appointment.when_send2, body=appointment.body_2)
+        if datetime.now() < appointment.when_send1:
+            tasks.send_sms_reminder().apply_async(
+                        args=[appointment.appoint_id], eta=appointment.when_send1, body=appointment.body_1)
 
     return appointment
 
