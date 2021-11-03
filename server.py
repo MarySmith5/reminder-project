@@ -1,21 +1,21 @@
 """Server for appointment reminder app."""
+
 import arrow
 from flask import Flask, render_template, request, flash, session, redirect
-# from flask_migrate import Migrate
-from celery import Celery
 from model import connect_to_db
 import tasks
 import crud
 from jinja2 import StrictUndefined
 from datetime import datetime, date, timedelta, time
 import os
+from celery import Celery
 
 app = Flask(__name__)
 app.secret_key = 'maryskey'
 app.jinja_env.undefined = StrictUndefined
 
-app.config['CELERY_BROKER_URL'] = 'redis://localhost:6379/0'
-app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
+app.config['CELERY_BROKER_URL'] = 'redis://localhost:5000/0'
+app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:5000/0'
 
 celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
 celery.conf.update(app.config)
@@ -85,7 +85,8 @@ def process_new_customer():
     """Creates a new customer"""
     first_name = request.form.get('first_name')
     last_name = request.form.get('last_name')
-    text_num = request.form.get('text_num')
+    text_num_data = request.form.get('text_num')
+    text_num = f"+{text_num_data}"
     landline = request.form.get('landline')
     email = request.form.get('email')
     if crud.check_existing_cust(first_name, last_name, text_num):
@@ -138,7 +139,13 @@ def process_appt():
     d = datetime.date(date)
     time = datetime.strptime(time_data, "%H:%M")
     t = datetime.time(time)
-    date_time = arrow.get(datetime.combine(d, t), session['timezone']).to('utc').naive
+    # date_and_time = datetime.combine(d, t)
+    # date_time = arrow.Arrow(date_and_time, session['timezone']).to('utc').naive
+    date_time = arrow.Arrow(year=d.year, month=d.month, day=d.day, hour=t.hour, minute=t.minute, tzinfo=session['timezone']).to('utc').naive
+    print(type(date_time))
+    print(date_time)
+    # import pdb # python debugger
+    # pdb.set_trace()
     first_name = crud.get_cust_fname(customer_id)
     when_send1 = date_time + timedelta(days=-1)
     body_1 = f"Hi, {first_name}! Remember your {gen_service} appointment tomorrow at {time_data.format('h:mm a')}. \nIf this doesn't work, contact {session['stylist']} at {session['contact_number']}."

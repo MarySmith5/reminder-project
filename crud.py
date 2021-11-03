@@ -68,12 +68,14 @@ def create_appointment(customer_id,
                               is_canceled=is_canceled)
     db.session.add(appointment)
     db.session.commit()
-    if appointment.my_customer.text_num:
-        tasks.send_sms_reminder().apply_async(
-                    args=[appointment.appoint_id], eta=appointment.when_send2, body=appointment.body_2)
-        if datetime.now() < appointment.when_send1:
-            tasks.send_sms_reminder().apply_async(
-                        args=[appointment.appoint_id], eta=appointment.when_send1, body=appointment.body_1)
+    # if appointment.my_customer.text_num:
+    #     print(appointment.my_customer.text_num)
+    #     if datetime.utcnow() < appointment.when_send2:
+    #         tasks.send_sms_reminder.apply_async(
+    #                     (appointment.appoint_id, appointment.body_2), eta=appointment.when_send2)
+    #     if datetime.utcnow() < appointment.when_send1:
+    #             tasks.send_sms_reminder.apply_async(
+                            #args=(appointment.appoint_id, appointment.body_1), eta=appointment.when_send1)
 
     return appointment
 
