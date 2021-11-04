@@ -2,7 +2,9 @@
 
 from model import db, Customer, Appointment, connect_to_db
 import tasks
-from datetime import datetime
+from datetime import datetime, timezone
+import arrow
+
 
 def create_customer(first_name, 
                    last_name, 
@@ -68,20 +70,25 @@ def create_appointment(customer_id,
                               is_canceled=is_canceled)
     db.session.add(appointment)
     db.session.commit()
-    # if appointment.my_customer.text_num:
-    #     print(appointment.my_customer.text_num)
-    #     if datetime.utcnow() < appointment.when_send2:
-    #         tasks.send_sms_reminder.apply_async(
-    #                     (appointment.appoint_id, appointment.body_2), eta=appointment.when_send2)
-    #     if datetime.utcnow() < appointment.when_send1:
-    #             tasks.send_sms_reminder.apply_async(
-                            #args=(appointment.appoint_id, appointment.body_1), eta=appointment.when_send1)
+    if appointment.my_customer.text_num:
+        tasks.send_sms_reminder(appointment.appoint_id, appointment.body_2)
+        s1 = appointment.when_send1
+        s2 = appointment.when_send2
+        first_send = arrow.Arrow(year=s1.year, month=s1.month, day=s1.day, hour=s1.hour, minute=s1.minute, tzinfo=s1.tzinfo).to('utc').naive
+        second_send = arrow.Arrow(year=s2.year, month=s2.month, day=s2.day, hour=s2.hour, minute=s2.minute, tzinfo=s2.tzinfo).to('utc').naive
+
+        if datetime.utcnow() < first_send:
+            tasks.send_sms_reminder.apply_async(args=[appointment.appoint_id, appointment.body_1], eta=first_send)
+            
+
+        if datetime.utcnow() < second_send:
+            tasks.send_sms_reminder.apply_async(args=(appointment.appoint_id, appointment.body_2), eta=second_send)
 
     return appointment
 
 
 def get_appointment(customer_id):
-    """Finds and returns a specific appointment by customer and date"""
+    """Finds and returns appointments by customer"""
     return Appointment.query.filter_by(customer_id=customer_id).all()
 
 
