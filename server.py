@@ -2,23 +2,53 @@
 
 import arrow
 from flask import Flask, render_template, request, flash, session, redirect
-from model import connect_to_db
-# import tasks
+from model import connect_to_db, Appointment
+import tasks
 import crud
 from jinja2 import StrictUndefined
 from datetime import datetime, date, timedelta, time
 import os
-from celery import Celery
+from celery import Celery 
+from twilio.rest import Client
+import pytz
+from celery.schedules import crontab
+from celery.decorators import periodic_task
+
 
 app = Flask(__name__)
 app.secret_key = 'maryskey'
 app.jinja_env.undefined = StrictUndefined
 
-app.config['CELERY_BROKER_URL'] = 'redis://localhost:5000/0'
-app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:5000/0'
+twilio_account_sid = os.environ['TWILIO_ACCOUNT_SID']
+twilio_auth_token = os.environ['TWILIO_AUTH_TOKEN']
+twilio_number = os.environ['TWILIO_NUMBER']
+client = Client(twilio_account_sid, twilio_auth_token)
 
-celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
+#broker = 'sqla+postgresql://user:pass@host/dbname'
+broker = 'sqla+postgresql://localhost:5000/reminders'
+
+
+celery = Celery(app.name, broker=broker)
 celery.conf.update(app.config)
+
+
+class ContextTask(celery.Task):
+    def __call__(self, *args, **kwargs):
+        with app.app_context():
+            return self.run(*args, **kwargs)
+
+
+celery.Task = ContextTask
+
+celery.conf.beat_schedule = {
+    'add-every-30-seconds': {
+        'task': 'tasks.add',
+        'schedule': 30.0,
+        'args': (16, 16)
+    },
+}
+
+
 
 # Falsey: False, None, "", [], {}, ()
 @app.route('/')
@@ -140,31 +170,25 @@ def process_appt():
     time = datetime.strptime(time_data, "%H:%M")
     t = datetime.time(time)
     read_time = t.strftime("%I:%M %p")
-    # date_and_time = datetime.combine(d, t)
-    # date_time = arrow.Arrow(date_and_time, session['timezone']).to('utc').naive
+    read_date = d. strftime("%A, %B %e")
     date_time = arrow.Arrow(year=d.year, month=d.month, day=d.day, hour=t.hour, minute=t.minute, tzinfo=session['timezone']).to('utc').naive
-    # print(type(date_time))
-    # print(date_time)
+    
     # import pdb # python debugger
     # pdb.set_trace()
     first_name = crud.get_cust_fname(customer_id)
-    when_send1 = date_time + timedelta(days=-1)
     
-    body_1 = f"Hi, {first_name}! Remember your {gen_service} appointment tomorrow at {read_time}. \nIf this doesn't work, contact {session['stylist']} at {session['contact_number']}."
-    when_send2 = date_time + timedelta(hours=-2)
-    body_2 = f"Hi, {first_name}! Remember your {gen_service} appointment TODAY at {read_time}. \nIf this doesn't work, contact {session['stylist']} at {session['contact_number']}."
-    
+    body_1 = f"Hi, {first_name}! Remember your {gen_service} appointment tomorrow, {read_date} at {read_time}. \nIf this doesn't work, contact {session['stylist']} at {session['contact_number']}."
+    body_2 = f"Hi, {first_name}! Remember your {gen_service} appointment TODAY, {read_date} at {read_time}. \nIf this doesn't work, contact {session['stylist']} at {session['contact_number']}."
+    print(body_2)
     appt = crud.create_appointment(customer_id, 
                                    gen_service, 
                                    specific_service, 
                                    date_time, 
                                    duration, 
                                    body_1, 
-                                   when_send1,
-                                   body_2,
-                                   when_send2)
-
-    flash(f"{first_name} has a {gen_service} appointment on {date_data} at {time_data.format('h:mm a')}.")
+                                   body_2,)
+    
+    flash(f"{first_name} has a {gen_service} appointment on {date_data} at {read_time}.")
     return render_template('another_appt.html', customer_id=appt.customer_id)
 
 
@@ -185,6 +209,33 @@ def cancel_appt(appoint_id):
 
 
 
+def send_sms_reminder(appoint_id, message):
+    
+    appointment = Appointment.query.filter_by(appoint_id=appoint_id).one() 
+
+    body = message
+    to = appointment.my_customer.text_num
+
+    client.messages.create(body=body, from_=twilio_number, to=to)
+
+nowfun = lambda: datetime.datetime.now(pytz.timezone(session['timezone']))
+
+celery.conf.timezone = nowfun
+
+
+@periodic_task(run_every=crontab(hour=7))
+def every_morning():
+    appts2 = crud.get_appt_remind2()
+    appts1 = crud.get_appt_remind1()
+    for appt in appts2:
+        send_sms_reminder(appt.appoint_id, appt.body_2)
+    for appt in appts1:
+        send_sms_reminder(appt.appoint_id, appt.body_2)
+
+
+
+
+tasks.every_morning()
 
 if __name__ == "__main__":
     # DebugToolbarExtension(app)

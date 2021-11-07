@@ -2,8 +2,9 @@
 
 from model import db, Customer, Appointment, connect_to_db
 import tasks
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 import arrow
+import time
 
 
 def create_customer(first_name, 
@@ -47,14 +48,13 @@ def check_existing_cust(first_name, last_name, text_num):
 
 def create_appointment(customer_id,  
                        gen_service,
-                       specific_service,
                        date_time,
                        duration,
+                       specific_service="No notes",
                        body_1=None, 
-                       when_send1=None, 
                        body_2=None, 
-                       when_send2=None,
-                       is_canceled=False):
+                       is_canceled=False,
+                       reminder_sent=False):
 
     """Create and return a new appointment"""
 
@@ -63,26 +63,12 @@ def create_appointment(customer_id,
                               specific_service=specific_service,
                               date_time=date_time,
                               duration=duration,
-                              body_1=body_1, 
-                              when_send1=when_send1, 
+                              body_1=body_1,  
                               body_2=body_2,
-                              when_send2=when_send2,
-                              is_canceled=is_canceled)
+                              is_canceled=is_canceled,
+                              reminder_sent=reminder_sent)
     db.session.add(appointment)
     db.session.commit()
-    if appointment.my_customer.text_num:
-        tasks.send_sms_reminder(appointment.appoint_id, appointment.body_2)
-        s1 = appointment.when_send1
-        s2 = appointment.when_send2
-        first_send = arrow.Arrow(year=s1.year, month=s1.month, day=s1.day, hour=s1.hour, minute=s1.minute, tzinfo=s1.tzinfo).to('utc').naive
-        second_send = arrow.Arrow(year=s2.year, month=s2.month, day=s2.day, hour=s2.hour, minute=s2.minute, tzinfo=s2.tzinfo).to('utc').naive
-
-        if datetime.utcnow() < first_send:
-            tasks.send_sms_reminder.apply_async(args=[appointment.appoint_id, appointment.body_1], eta=first_send)
-            
-
-        if datetime.utcnow() < second_send:
-            tasks.send_sms_reminder.apply_async(args=(appointment.appoint_id, appointment.body_2), eta=second_send)
 
     return appointment
 
@@ -99,7 +85,7 @@ def get_appt_by_id(appoint_id):
 
 def get_cust_by_appt_id(appoint_id):
     """Finds and returns a customer id by an appointment id."""
-    c =Appointment.query.filter_by(appoint_id=appoint_id).one()
+    c = Appointment.query.filter_by(appoint_id=appoint_id).one()
     return c.my_customer.customer_id
 
 
@@ -109,6 +95,19 @@ def cancel_appt(appoint_id):
     a.is_canceled = True
     db.session.commit()
     return a
+
+
+def get_appt_remind2():
+    today = datetime.date.now()
+    appts_to_remind2 = Appointment.query.filter(Appointment.date_time == today, Appointment.my_customer.text_num!=None, Appointment.is_canceled==False, Appointment.reminder_sent==False).all()
+    return appts_to_remind2
+
+
+def get_appt_remind1():
+    tomorrow = datetime.date.now() + timedelta(days=1)
+    appts_to_remind1 = Appointment.query.filter(Appointment.date_time == tomorrow, Appointment.my_customer.text_num!=None, Appointment.is_canceled==False, Appointment.reminder_sent==False).all()
+    return appts_to_remind1
+
 
 
 if __name__ == '__main__':
