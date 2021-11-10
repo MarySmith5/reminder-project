@@ -54,7 +54,8 @@ def create_appointment(customer_id,
                        body_1=None, 
                        body_2=None, 
                        is_canceled=False,
-                       reminder_sent=False):
+                       reminder1_sent=False,
+                       reminder2_sent=False):
 
     """Create and return a new appointment"""
 
@@ -66,7 +67,8 @@ def create_appointment(customer_id,
                               body_1=body_1,  
                               body_2=body_2,
                               is_canceled=is_canceled,
-                              reminder_sent=reminder_sent)
+                              reminder1_sent=reminder1_sent,
+                              reminder2_sent=reminder2_sent)
     db.session.add(appointment)
     db.session.commit()
 
@@ -99,13 +101,13 @@ def cancel_appt(appoint_id):
 
 def get_appt_remind2():
     today = datetime.date.now()
-    appts_to_remind2 = Appointment.query.filter(Appointment.date_time == today, Appointment.my_customer.text_num!=None, Appointment.is_canceled==False, Appointment.reminder_sent==False).all()
+    appts_to_remind2 = Appointment.query.filter(Appointment.date_time == today, Appointment.my_customer.text_num!=None, Appointment.is_canceled==False, Appointment.reminder2_sent==False).all()
     return appts_to_remind2
 
 
 def get_appt_remind1():
     tomorrow = datetime.date.now() + timedelta(days=1)
-    appts_to_remind1 = Appointment.query.filter(Appointment.date_time == tomorrow, Appointment.my_customer.text_num!=None, Appointment.is_canceled==False, Appointment.reminder_sent==False).all()
+    appts_to_remind1 = Appointment.query.filter(Appointment.date_time == tomorrow, Appointment.my_customer.text_num!=None, Appointment.is_canceled==False, Appointment.reminder1_sent==False).all()
     return appts_to_remind1
 
 

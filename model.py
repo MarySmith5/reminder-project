@@ -39,7 +39,8 @@ class Appointment(db.Model):
     body_1 = db.Column(db.Text)
     body_2 = db.Column(db.Text)
     is_canceled = db.Column(db.Boolean)
-    reminder_sent = db.Column(db.Boolean)
+    reminder1_sent = db.Column(db.Boolean)
+    reminder2_sent = db.Column(db.Boolean)
 
     my_customer = db.relationship("Customer", back_populates="appts")
     

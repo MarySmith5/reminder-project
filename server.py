@@ -8,46 +8,14 @@ import crud
 from jinja2 import StrictUndefined
 from datetime import datetime, date, timedelta, time
 import os
-from celery import Celery 
-from twilio.rest import Client
 import pytz
-from celery.schedules import crontab
-from celery.decorators import periodic_task
 
 
 app = Flask(__name__)
 app.secret_key = 'maryskey'
 app.jinja_env.undefined = StrictUndefined
 
-twilio_account_sid = os.environ['TWILIO_ACCOUNT_SID']
-twilio_auth_token = os.environ['TWILIO_AUTH_TOKEN']
-twilio_number = os.environ['TWILIO_NUMBER']
-client = Client(twilio_account_sid, twilio_auth_token)
-
-#broker = 'sqla+postgresql://user:pass@host/dbname'
-broker = 'sqla+postgresql://localhost:5000/reminders'
-
-
-celery = Celery(app.name, broker=broker)
-celery.conf.update(app.config)
-
-
-class ContextTask(celery.Task):
-    def __call__(self, *args, **kwargs):
-        with app.app_context():
-            return self.run(*args, **kwargs)
-
-
-celery.Task = ContextTask
-
-celery.conf.beat_schedule = {
-    'add-every-30-seconds': {
-        'task': 'tasks.add',
-        'schedule': 30.0,
-        'args': (16, 16)
-    },
-}
-
+nowfun = lambda: datetime.datetime.now(pytz.timezone(session['timezone']))
 
 
 # Falsey: False, None, "", [], {}, ()
@@ -206,32 +174,6 @@ def cancel_appt(appoint_id):
     appointment = crud.cancel_appt(appoint_id)
     flash(f"{appointment} is CANCELED.")
     return redirect('/customer_options')
-
-
-
-def send_sms_reminder(appoint_id, message):
-    
-    appointment = Appointment.query.filter_by(appoint_id=appoint_id).one() 
-
-    body = message
-    to = appointment.my_customer.text_num
-
-    client.messages.create(body=body, from_=twilio_number, to=to)
-
-nowfun = lambda: datetime.datetime.now(pytz.timezone(session['timezone']))
-
-celery.conf.timezone = nowfun
-
-
-@periodic_task(run_every=crontab(hour=7))
-def every_morning():
-    appts2 = crud.get_appt_remind2()
-    appts1 = crud.get_appt_remind1()
-    for appt in appts2:
-        send_sms_reminder(appt.appoint_id, appt.body_2)
-    for appt in appts1:
-        send_sms_reminder(appt.appoint_id, appt.body_2)
-
 
 
 
