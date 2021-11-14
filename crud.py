@@ -1,10 +1,10 @@
 """Crud operations"""
 
 from model import db, Customer, Appointment, connect_to_db
-import tasks
 from datetime import datetime, timezone, timedelta
 import arrow
 import time
+import tasks
 
 
 def create_customer(first_name, 
@@ -53,25 +53,33 @@ def create_appointment(customer_id,
                        specific_service="No notes",
                        body_1=None, 
                        body_2=None, 
-                       is_canceled=False,
-                       reminder1_sent=False,
-                       reminder2_sent=False):
+                       is_canceled=False):
 
     """Create and return a new appointment"""
 
     appointment = Appointment(customer_id=customer_id,   
                               gen_service=gen_service,
-                              specific_service=specific_service,
                               date_time=date_time,
                               duration=duration,
+                              specific_service=specific_service,
                               body_1=body_1,  
                               body_2=body_2,
-                              is_canceled=is_canceled,
-                              reminder1_sent=reminder1_sent,
-                              reminder2_sent=reminder2_sent)
+                              is_canceled=is_canceled)
     db.session.add(appointment)
     db.session.commit()
+    #tasks.send_sms_reminder(appointment.appoint_id, appointment.body_2)
 
+    def get_notification_time():
+        appointment_time = appointment.date_time
+        reminder_time = appointment_time + timedelta(hours=-2)
+        print(f"REMINDER TIME {reminder_time}")
+        print(f"NOW {datetime.now()}")
+        return reminder_time
+
+    tasks.send_sms_reminder.apply_async(
+                args=[appointment.appoint_id, appointment.body_2]
+            )
+    #print(f"RESULT READY {result.ready()}")
     return appointment
 
 
@@ -97,18 +105,6 @@ def cancel_appt(appoint_id):
     a.is_canceled = True
     db.session.commit()
     return a
-
-
-def get_appt_remind2():
-    today = datetime.date.now()
-    appts_to_remind2 = Appointment.query.filter(Appointment.date_time == today, Appointment.my_customer.text_num!=None, Appointment.is_canceled==False, Appointment.reminder2_sent==False).all()
-    return appts_to_remind2
-
-
-def get_appt_remind1():
-    tomorrow = datetime.date.now() + timedelta(days=1)
-    appts_to_remind1 = Appointment.query.filter(Appointment.date_time == tomorrow, Appointment.my_customer.text_num!=None, Appointment.is_canceled==False, Appointment.reminder1_sent==False).all()
-    return appts_to_remind1
 
 
 

@@ -33,20 +33,18 @@ class Appointment(db.Model):
     appoint_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     customer_id = db.Column(db.Integer, db.ForeignKey('customers.customer_id'), nullable=False)
     gen_service = db.Column(db.String(25), nullable=False)
-    specific_service = db.Column(db.String(100))
     date_time = db.Column(db.DateTime, nullable=False)
     duration = db.Column(db.Interval)
+    specific_service = db.Column(db.String(100))
     body_1 = db.Column(db.Text)
     body_2 = db.Column(db.Text)
     is_canceled = db.Column(db.Boolean)
-    reminder1_sent = db.Column(db.Boolean)
-    reminder2_sent = db.Column(db.Boolean)
 
     my_customer = db.relationship("Customer", back_populates="appts")
     
     def __repr__(self):
         """Show info about an appointment"""
-        return f"< Appointment id={self.appoint_id}, service={self.gen_service}, date_time={self.date_time}, CANCELED={self.is_canceled}, reminder_sent={self.reminder_sent} >"
+        return f"< Appointment id={self.appoint_id}, service={self.gen_service}, date_time={self.date_time}, CANCELED={self.is_canceled} >"
 
 
 

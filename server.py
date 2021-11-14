@@ -3,19 +3,33 @@
 import arrow
 from flask import Flask, render_template, request, flash, session, redirect
 from model import connect_to_db, Appointment
-import tasks
 import crud
 from jinja2 import StrictUndefined
 from datetime import datetime, date, timedelta, time
 import os
-import pytz
+from celery import Celery
+
 
 
 app = Flask(__name__)
-app.secret_key = 'maryskey'
+app.secret_key = os.environ['SECRET_KEY']
 app.jinja_env.undefined = StrictUndefined
 
-nowfun = lambda: datetime.datetime.now(pytz.timezone(session['timezone']))
+def make_celery(app):
+    celery = Celery(
+        app.import_name,
+        backend=app.config['CELERY_RESULT_BACKEND'],
+        broker=app.config['CELERY_BROKER_URL']
+    )
+    celery.conf.update(app.config)
+
+    class ContextTask(celery.Task):
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return self.run(*args, **kwargs)
+
+    celery.Task = ContextTask
+    return celery  
 
 
 # Falsey: False, None, "", [], {}, ()
@@ -84,7 +98,7 @@ def process_new_customer():
     first_name = request.form.get('first_name')
     last_name = request.form.get('last_name')
     text_num_data = request.form.get('text_num')
-    text_num = f"+{text_num_data}"
+    text_num = f"+1{text_num_data}"
     landline = request.form.get('landline')
     email = request.form.get('email')
     if crud.check_existing_cust(first_name, last_name, text_num):
@@ -129,6 +143,7 @@ def process_appt():
     gen_service = request.form.get('gen_service')
     specific_service = request.form.get('specific_service')
     date_data = request.form.get('date')
+    print(date_data)
     time_data = request.form.get('time')
     duration = request.form.get('duration')
 
@@ -139,20 +154,20 @@ def process_appt():
     t = datetime.time(time)
     read_time = t.strftime("%I:%M %p")
     read_date = d. strftime("%A, %B %e")
-    date_time = arrow.Arrow(year=d.year, month=d.month, day=d.day, hour=t.hour, minute=t.minute, tzinfo=session['timezone']).to('utc').naive
-    
+ #date_time = arrow.Arrow(year=d.year, month=d.month, day=d.day, hour=t.hour, minute=t.minute, tzinfo=session['timezone']).to('utc').naive
+    date_time = datetime.combine(d, t)
     # import pdb # python debugger
     # pdb.set_trace()
     first_name = crud.get_cust_fname(customer_id)
     
     body_1 = f"Hi, {first_name}! Remember your {gen_service} appointment tomorrow, {read_date} at {read_time}. \nIf this doesn't work, contact {session['stylist']} at {session['contact_number']}."
     body_2 = f"Hi, {first_name}! Remember your {gen_service} appointment TODAY, {read_date} at {read_time}. \nIf this doesn't work, contact {session['stylist']} at {session['contact_number']}."
-    print(body_2)
+    
     appt = crud.create_appointment(customer_id, 
-                                   gen_service, 
-                                   specific_service, 
+                                   gen_service,  
                                    date_time, 
-                                   duration, 
+                                   duration,
+                                   specific_service, 
                                    body_1, 
                                    body_2,)
     
@@ -177,7 +192,8 @@ def cancel_appt(appoint_id):
 
 
 
-tasks.every_morning()
+#tasks.every_morning()
+
 
 if __name__ == "__main__":
     # DebugToolbarExtension(app)
