@@ -3,7 +3,15 @@
 
 {% block body %}
   <h1>To make changes to this appointment, you must cancel it and create a new appointment.</h1>
-    <p>{{appointment}}</p>
+    <p>{{appointment.my_customer.first_name}} {{appointment.my_customer.last_name}}</p>
+    <p>{{appointment.gen_service}}</p>
+    <p>{{appointment.date}}</p>
+    <p>{{appointment.get_readable_time()}}</p>
+    <p>NOTES: {{appointment.specific_service}}</p>
+    <p>Canceled: {{appointment.is_canceled}}</p>
+    <p>First reminder sent: {{appointment.sent_1}}</p>
+    <p>Second reminder sent: {{appointment.sent_2}}</p>
+
     <form class="form-cancel" method="POST" action="/canceled/{{appointment.appoint_id}}">
         
         <button class="btn btn-lg btn-primary btn-block" type="cancel">Cancel

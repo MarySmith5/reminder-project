@@ -37,6 +37,16 @@
                 <input type="time" id="time" name="time">
         </div>
         <div class="form-group">
+            <label for="timezone-field" class="sr-only">Timezone</label>
+            <select name="timezone" id="timezone">
+              <option value="US/Pacific">US/Pacific</option>
+              <option value="US/Mountain">US/Mountain</option>
+              <option value="US/Central">US/Central</option>
+              <option value="US/Eastern">US/Eastern</option>
+            </select>
+                   
+          </div>
+        <div class="form-group">
             <label for="duration">Duration:</label>
                 <select name="duration-picker" id="duration">
                     <option value="00:15">0:15</option>
@@ -51,6 +61,28 @@
                     <option value="02:30">2:30</option>
                     <option value="02:45">2:45</option>
                     <option value="03:00">3:00</option>
+                </select>            
+        </div>
+        <p> Optional</p>
+        <div class="form-group">
+            <label for="greeting">Greeting:</label>
+                <select name="greeting" id="greeting">
+                    <option value="Good morning &#128144">Good morning! &#128144</option>
+                    <option value="It's time for your &#128135.">It's time for your &#128135.</option>
+                    <option value="&#128133">&#128133</option>
+                    <option value="&#9986">&#9986</option>
+                    <option value="&#10024 Yay! &#10024">&#10024 Yay! &#10024</option>
+                    <option value="&#128515 Hi!">&#128515 Hi!</option>
+                </select>            
+        </div>
+        <div class="form-group">
+            <label for="closing">Closing:</label>
+                <select name="closing" id="closing">
+                    <option value="I look forward to seeing you &#129303">I look forward to seeing you &#129303</option>
+                    <option value="You're going to look amazing &#129321">You're going to look amazing &#129321</option>
+                    <option value="&#128567 required">&#128567 required</option>
+                    <option value="Feeling sick &#129298? Let's reschedule.">Feeling sick &#129298? Let's reschedule.</option>
+                    <option value="&#128136">&#128136</option>
                 </select>            
         </div>
     </div>

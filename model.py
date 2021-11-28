@@ -1,7 +1,8 @@
 """Models for reminder app"""
 
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from datetime import datetime, date, time
+import arrow
 
 db = SQLAlchemy()
 
@@ -25,6 +26,8 @@ class Customer(db.Model):
         return f"<Customer id={self.customer_id}, {self.first_name} {self.last_name}, text={self.text_num}, landline={self.landline}, email={self.email}>"
 
 
+    
+
 class Appointment(db.Model):
     """A scheduled event"""
 
@@ -34,17 +37,39 @@ class Appointment(db.Model):
     customer_id = db.Column(db.Integer, db.ForeignKey('customers.customer_id'), nullable=False)
     gen_service = db.Column(db.String(25), nullable=False)
     date_time = db.Column(db.DateTime, nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    time = db.Column(db.Time, nullable=False)
+    timezone = db.Column(db.String(25), nullable=False)
     duration = db.Column(db.Interval)
     specific_service = db.Column(db.String(100))
+    body = db.Column(db.Text)
     body_1 = db.Column(db.Text)
     body_2 = db.Column(db.Text)
     is_canceled = db.Column(db.Boolean)
+    sent_1 = db.Column(db.Boolean)
+    sent_2 = db.Column(db.Boolean)
+    
 
     my_customer = db.relationship("Customer", back_populates="appts")
     
     def __repr__(self):
         """Show info about an appointment"""
         return f"< Appointment id={self.appoint_id}, service={self.gen_service}, date_time={self.date_time}, CANCELED={self.is_canceled} >"
+
+    def get_readable_time(self):
+        t = (self.time)
+        read_time = t.strftime("%I:%M %p")
+        return read_time
+
+    def get_remind_time1(self):
+        appointment_time = arrow.get(self.date_time)
+        reminder_time1 = appointment_time.shift(days=-1)
+        return reminder_time1
+
+    def get_remind_time2(self):
+        appointment_time = arrow.get(self.date_time)
+        reminder_time2 = appointment_time.shift(hours=-3)
+        return reminder_time2
 
 
 

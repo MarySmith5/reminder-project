@@ -49,38 +49,67 @@ def check_existing_cust(first_name, last_name, text_num):
 def create_appointment(customer_id,  
                        gen_service,
                        date_time,
+                       date,
+                       time,
+                       timezone,
                        duration,
                        specific_service="No notes",
+                       body=None,
                        body_1=None, 
                        body_2=None, 
-                       is_canceled=False):
+                       is_canceled=False,
+                       sent_1=False,
+                       sent_2=False
+                       ):
 
     """Create and return a new appointment"""
 
     appointment = Appointment(customer_id=customer_id,   
                               gen_service=gen_service,
                               date_time=date_time,
+                              date=date,
+                              time=time,
+                              timezone=timezone,
                               duration=duration,
                               specific_service=specific_service,
+                              body=body,
                               body_1=body_1,  
                               body_2=body_2,
-                              is_canceled=is_canceled)
+                              is_canceled=is_canceled,
+                              sent_1=sent_1,
+                              sent_2=sent_2
+                              )
+
+    appointment.date_time = arrow.get(appointment.date_time, appointment.timezone).to('utc').naive
     db.session.add(appointment)
     db.session.commit()
-    #tasks.send_sms_reminder(appointment.appoint_id, appointment.body_2)
+    
+    tasks.send_sms_reminder_now(appointment.appoint_id)
 
-    def get_notification_time():
-        appointment_time = appointment.date_time
-        reminder_time = appointment_time + timedelta(hours=-2)
-        print(f"REMINDER TIME {reminder_time}")
-        print(f"NOW {datetime.now()}")
-        return reminder_time
+    if appointment.is_canceled == False:
+        tasks.send_sms_reminder1.apply_async(
+                    args=[appointment.appoint_id], eta=appointment.get_remind_time1()
+                )
+        tasks.send_sms_reminder2.apply_async(
+                    args=[appointment.appoint_id], eta=appointment.get_remind_time2()
+                )
 
-    tasks.send_sms_reminder.apply_async(
-                args=[appointment.appoint_id, appointment.body_2]
-            )
-    #print(f"RESULT READY {result.ready()}")
+    
     return appointment
+
+
+# def get_remind1():
+#     now = datetime.today()+timedelta(days=-1)
+#     date=datetime.date(now)
+#     print(date)
+#     return Appointment.query.filter_by(date=date, is_canceled=False).all()
+
+
+# def get_remind2():
+#     now = datetime.today()
+#     date = datetime.date(now)
+#     print(date)
+#     return Appointment.query.filter_by(date=date, is_canceled=False).all()
 
 
 def get_appointment(customer_id):
@@ -105,6 +134,15 @@ def cancel_appt(appoint_id):
     a.is_canceled = True
     db.session.commit()
     return a
+
+
+# def mark_as_sent(appoint_id, which_send):
+#     """Updates reminder-sent status"""
+
+#     r = Appointment.query.filter_by(appoint_id=appoint_id).one()
+#     r.which_send = True
+#     db.session.commit()
+#     return r
 
 
 

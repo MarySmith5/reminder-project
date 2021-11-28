@@ -1,7 +1,7 @@
 """Server for appointment reminder app."""
 
 import arrow
-from flask import Flask, render_template, request, flash, session, redirect
+from flask import Flask, render_template, request, flash, session, redirect, jsonify
 from model import connect_to_db, Appointment
 import crud
 from jinja2 import StrictUndefined
@@ -15,12 +15,16 @@ app = Flask(__name__)
 app.secret_key = os.environ['SECRET_KEY']
 app.jinja_env.undefined = StrictUndefined
 
+USER_SESSION = session
+
 def make_celery(app):
     celery = Celery(
         app.import_name,
         backend=app.config['CELERY_RESULT_BACKEND'],
-        broker=app.config['CELERY_BROKER_URL']
+        broker=app.config['CELERY_BROKER_URL'],
+        #timezone=app.config['TIMEZONE']
     )
+    
     celery.conf.update(app.config)
 
     class ContextTask(celery.Task):
@@ -29,7 +33,7 @@ def make_celery(app):
                 return self.run(*args, **kwargs)
 
     celery.Task = ContextTask
-    return celery  
+    return celery
 
 
 # Falsey: False, None, "", [], {}, ()
@@ -75,7 +79,7 @@ def create_account():
     session['business_name'] = request.form .get('business')
     session['contact_number'] = request.form.get('contact')
     session['password'] = request.form.get('password')
-    session['timezone'] = request.form.get('timezone')
+    #session['timezone'] = request.form.get('timezone')
 
     return redirect("/login")
     
@@ -98,9 +102,16 @@ def process_new_customer():
     first_name = request.form.get('first_name')
     last_name = request.form.get('last_name')
     text_num_data = request.form.get('text_num')
-    text_num = f"+1{text_num_data}"
+
+    if not text_num_data.isdigit() or len(text_num_data) != 10:
+        flash("Invalid phone number. Please enter 10 digits without spaces or other characters.")
+        return render_template('new_customer.html')
+    else:
+        text_num = f"+1{text_num_data}"
+
     landline = request.form.get('landline')
     email = request.form.get('email')
+
     if crud.check_existing_cust(first_name, last_name, text_num):
         flash("This customer already exists.")
         return redirect('/customer_options')
@@ -143,9 +154,11 @@ def process_appt():
     gen_service = request.form.get('gen_service')
     specific_service = request.form.get('specific_service')
     date_data = request.form.get('date')
-    print(date_data)
     time_data = request.form.get('time')
+    timezone = request.form.get('timezone')
     duration = request.form.get('duration')
+    greeting = request.form.get('greeting')
+    closing = request.form.get('closing')
 
    
     date = datetime.strptime(date_data, "%Y-%m-%d")
@@ -159,17 +172,21 @@ def process_appt():
     # import pdb # python debugger
     # pdb.set_trace()
     first_name = crud.get_cust_fname(customer_id)
-    
-    body_1 = f"Hi, {first_name}! Remember your {gen_service} appointment tomorrow, {read_date} at {read_time}. \nIf this doesn't work, contact {session['stylist']} at {session['contact_number']}."
-    body_2 = f"Hi, {first_name}! Remember your {gen_service} appointment TODAY, {read_date} at {read_time}. \nIf this doesn't work, contact {session['stylist']} at {session['contact_number']}."
+    body = f"{first_name}, you have a {gen_service} appointment on {read_date} at {read_time}. Click the above date to add it to your calendar. Thank you!!!"
+    body_1 = f"{greeting} {first_name}, remember your {gen_service} appointment TOMORROW, {read_date} at {read_time}. \nIf this doesn't work, contact {session['stylist']} at {session['contact_number']} {closing}."
+    body_2 = f"{greeting} {first_name}, remember your {gen_service} appointment TODAY, {read_date} at {read_time}. \nIf this doesn't work, contact {session['stylist']} at {session['contact_number']} {closing}."
     
     appt = crud.create_appointment(customer_id, 
                                    gen_service,  
-                                   date_time, 
+                                   date_time,
+                                   date,
+                                   time,
+                                   timezone, 
                                    duration,
-                                   specific_service, 
+                                   specific_service,
+                                   body, 
                                    body_1, 
-                                   body_2,)
+                                   body_2)
     
     flash(f"{first_name} has a {gen_service} appointment on {date_data} at {read_time}.")
     return render_template('another_appt.html', customer_id=appt.customer_id)
@@ -190,6 +207,10 @@ def cancel_appt(appoint_id):
     flash(f"{appointment} is CANCELED.")
     return redirect('/customer_options')
 
+
+@app.route("/get-user-timezone", methods=['GET'])
+def get_user_timezone():
+    return jsonify({'timezone': session.get('timezone', datetime.today())}) 
 
 
 #tasks.every_morning()
