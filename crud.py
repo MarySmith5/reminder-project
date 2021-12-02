@@ -85,11 +85,15 @@ def create_appointment(customer_id,
     db.session.commit()
     
     tasks.send_sms_reminder_now(appointment.appoint_id)
-
+    now = datetime.utcnow().date()
+    
+    print(f"NOW DATE: {now}")
+    print(f"APPOINTMENT DATE: {appointment.date}")
     if appointment.is_canceled == False:
-        tasks.send_sms_reminder1.apply_async(
-                    args=[appointment.appoint_id], eta=appointment.get_remind_time1()
-                )
+        if appointment.date != now:
+            tasks.send_sms_reminder1.apply_async(
+                        args=[appointment.appoint_id], eta=appointment.get_remind_time1()
+                    )
         tasks.send_sms_reminder2.apply_async(
                     args=[appointment.appoint_id], eta=appointment.get_remind_time2()
                 )

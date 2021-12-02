@@ -54,12 +54,13 @@ class Appointment(db.Model):
     
     def __repr__(self):
         """Show info about an appointment"""
-        return f"< Appointment id={self.appoint_id}, service={self.gen_service}, date_time={self.date_time}, CANCELED={self.is_canceled} >"
+        return f"< Appointment id={self.appoint_id}, service={self.gen_service}, date={self.date} time={self.time}, CANCELED={self.is_canceled} >"
 
     def get_readable_time(self):
         t = (self.time)
         read_time = t.strftime("%I:%M %p")
         return read_time
+
 
     def get_remind_time1(self):
         appointment_time = arrow.get(self.date_time)
@@ -87,10 +88,7 @@ def connect_to_db(flask_app, db_uri="postgresql:///reminders", echo=False):
 if __name__ == "__main__":
     from server import app
 
-    # Call connect_to_db(app, echo=False) if your program output gets
-    # too annoying; this will tell SQLAlchemy not to print out every
-    # query it executes.
-
+    
     connect_to_db(app, echo=False)
 
 
