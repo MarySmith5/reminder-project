@@ -2,56 +2,57 @@
 {% block title %}Stylist Account{% endblock %}
 
 {% block body %}
-<h1>Create an Account</h1>
-<form class="form-signup" method="POST" action="/">
-
-    <h2 class="form-signin-heading">Please Enter the Following Info</h2>
-
-        <div class="form-group">
-            <label for="business-field" class="sr-only">Business Name</label>
-            <input type="business"
-                   name="business"
-                   class="form-control input-lg"
-                   placeholder="business name"
-                   required
-                   autofocus>
-          </div>
+<div class="sidenav">
+  <img class="logo-md" src="/static/friendly.png">
   
-    <div class="form-group">
-      <label for="stylist-field" class="sr-only">Stylist Name</label>
-      <input type="stylist"
-             name="stylist"
-             class="form-control input-lg"
-             placeholder="operator"
-             required
-             autofocus>
-    </div>
-
-    <div class="form-group">
-      <label for="contact-field" class="sr-only">Contact Number</label>
-      <input type="contact"
-             name="contact"
-             class="form-control input-lg"
-             placeholder="digits only"
-             required
-             autofocus>
-    </div>
+  <form class="form" method="POST" action="/">
+    <h2>Create an Account</h2>
+        <p></p>
+          <div class="form-group">
+              <label for="business-field" class="sr-only">Business Name</label>
+              <input type="business"
+                    name="business"
+                    class="form-control input-lg"
+                    placeholder="business name"
+                    required
+                    autofocus>
+            </div>
+          <p></p>
+      <div class="form-group">
+        <label for="stylist-field" class="sr-only">Stylist Name</label>
+        <input type="stylist"
+              name="stylist"
+              class="form-control input-lg"
+              placeholder="stylist name"
+              required
+              autofocus>
+      </div>
+        <p></p>
+      <div class="form-group">
+        <label for="contact-field" class="sr-only">Contact Number</label>
+        <input type="contact"
+              name="contact"
+              class="form-control input-lg"
+              placeholder="digits only"
+              required
+              autofocus>
+      </div>
+        <p></p>
     
-  
-    <div class="form-group">
-      <label for="password-field" class="sr-only">Password</label>
-      <input type="password"
-             name="password"
-             class="form-control input-lg"
-             placeholder="Password"
-             required>
-    </div>
-  
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Create Account
-    </button>
-  
-  </form>
-       
+      <div class="form-group">
+        <label for="password-field" class="sr-only">Password</label>
+        <input type="password"
+              name="password"
+              class="form-control"
+              placeholder="password"
+              required>
+      </div>
+      <p></p>
+      <button class="btn btn-block btn-secondary fw-bold bg-pink border-white" type="submit">Create Account
+      </button>
+    
+    </form>
+  </div>    
   </body>
   </html>
   

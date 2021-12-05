@@ -1,34 +1,54 @@
 {% extends 'base.html' %}
+{% block head %}
+<style>
+  body {
+    background: #333 url("/static/haircut-g700ec866e_1920.jpg");
+  }
+</style>
+{% endblock %}
 {% block title %}Customer Options{% endblock %}
 
 {% block body %}
-<h2>What would you like to do?</h2>
-    <ul>
-      <li><a href="/new_customer">Add a new customer</a></li>
-
-      <li>Find a customer to view, make or change appointment:</li>
-        <form class="form-find-cusotmer" method="POST" action="/customer_options">
-            <div class="form-group">
-                <label for="first-name-field" class="sr-only">Customer First Name</label>
-                <input type="first_name"
-                       name="first_name"
-                       class="form-control input-lg"
-                       placeholder="first name"
-                       required
-                       autofocus>
-              </div>
-
+         
+<div class="sidenav">
+  {% for msg in get_flashed_messages() %}
+  <p class="flash-msg">
+    {{ msg }}
+  </p>
+  {% endfor %}
+        <form class="form" method="POST" action="/customer_options">
+          
+            <h2>Would you like to:</h2>
+              <p></p>
+                <a href="/new_customer">Add a new customer</a>
+                  <p></p>
+                <h2>or</h2>
+              
+                <p>Find a customer:</p>
               <div class="form-group">
-                <label for="last-name-field" class="sr-only">Customer Last Name</label>
-                <input type="last_name"
-                       name="last_name"
-                       class="form-control input-lg"
-                       placeholder="last name"
-                       required
-                       autofocus>
-              </div>
-          <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+                  <label for="first-name-field" class="sr-only">Customer First Name</label>
+                  <input type="first_name"
+                        name="first_name"
+                        class="form-control input-lg"
+                        placeholder="first name"
+                        required
+                        autofocus>
+                </div>
+                <P></P>
+                <div class="form-group">
+                  <label for="last-name-field" class="sr-only">Customer Last Name</label>
+                  <input type="last_name"
+                        name="last_name"
+                        class="form-control input-lg"
+                        placeholder="last name"
+                        required
+                        autofocus>
+                </div>
+              <p></p>
+            <button class="btn btn-block btn-secondary fw-bold bg-pink border-white" type="submit">Submit</button>
         </form>
-    </ul>
-
+        <footer>
+          <img class="logo-sm" src="/static/friendly.png">
+        </footer>
+</div>
 {% endblock %}
