@@ -136,9 +136,9 @@ def find_customer():
 @app.route("/customers/<customer_id>")
 def view_customer_appointments(customer_id):
     """Shows all existing appointments of a customer"""
-    
+    name = crud.get_cust_fname(customer_id)
     appts = crud.get_appointment(customer_id)
-    return render_template('choose_appointment.html', appts=appts, customer_id=customer_id)
+    return render_template('choose_appointment.html', appts=appts, customer_id=customer_id, name=name)
 
 
 @app.route("/add_appointment/<customer_id>")
@@ -172,7 +172,7 @@ def process_appt():
     # import pdb # python debugger
     # pdb.set_trace()
     first_name = crud.get_cust_fname(customer_id)
-    body = f"{first_name}, you have a {gen_service} appointment on {read_date} at {read_time}. Click the above date to add it to your calendar. Thank you!!!"
+    body = f"{first_name}, you have a {gen_service} appointment  at {session['business_name']} on {read_date} at {read_time}. Click the above date to add it to your calendar. Thank you!!!"
     body_1 = f"{greeting} {first_name}, remember your {gen_service} appointment TOMORROW, {read_date} at {read_time}. \nIf this doesn't work, contact {session['stylist']} at {session['contact_number']} {closing}."
     body_2 = f"{greeting} {first_name}, remember your {gen_service} appointment TODAY, {read_date} at {read_time}. \nIf this doesn't work, contact {session['stylist']} at {session['contact_number']} {closing}."
     

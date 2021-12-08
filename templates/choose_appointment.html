@@ -3,7 +3,10 @@
 
 {% block body %}
 <div class="dark">
+  <a href='/add_appointment/{{customer_id}}'>CLICK HERE TO ADD A NEW APPOINTMENT FOR {{name}}</a>
+    <p></p>
   <p></p>
+  <h2>or</h2>
   <h1>Select an appointment to alter:</h1>
     <p></p>
       {% for appt in appts %}
@@ -12,8 +15,7 @@
        
       {% endfor %}
   <p></p>
-    <a href='/add_appointment/{{customer_id}}'>CLICK HERE TO ADD A NEW APPOINTMENT</a>
-    <p></p>
+    
     <a href='/customer_options'>CLICK HERE TO CHANGE CUSTOMERS</a>
  
   <p></p>
