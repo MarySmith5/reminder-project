@@ -204,13 +204,13 @@ def offer_cancel(appoint_id):
 def cancel_appt(appoint_id):
     """Marks an appointment as canceled"""
     appointment = crud.cancel_appt(appoint_id)
-    flash(f"{appointment} is CANCELED.")
+    flash(f"{appointment.my_customer.first_name} {appointment.my_customer.last_name}'s {appointment.date} appointment is CANCELED.")
     return redirect('/customer_options')
 
 
-@app.route("/get-user-timezone", methods=['GET'])
-def get_user_timezone():
-    return jsonify({'timezone': session.get('timezone', datetime.today())}) 
+# @app.route("/get-user-timezone", methods=['GET'])
+# def get_user_timezone():S
+#     return jsonify({'timezone': session.get('timezone', datetime.today())}) 
 
 
 #tasks.every_morning()

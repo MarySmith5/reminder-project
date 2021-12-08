@@ -2,20 +2,26 @@
 {% block title %}Choose an appointment{% endblock %} 
 
 {% block body %}
+<div class="dark">
+  <p></p>
   <h1>Select an appointment to alter:</h1>
-  
-    <ul>
+    <p></p>
       {% for appt in appts %}
-        <li>
-            <a href="/appts/{{appt.appoint_id}}">{{appt}}</a>
-        </li>
+        <p></p>
+        <a href="/appts/{{appt.appoint_id}}">{{appt}}</a>
+       
       {% endfor %}
-    </ul>
-  <div>
+  <p></p>
     <a href='/add_appointment/{{customer_id}}'>CLICK HERE TO ADD A NEW APPOINTMENT</a>
-  </div>
-  <div>
+    <p></p>
     <a href='/customer_options'>CLICK HERE TO CHANGE CUSTOMERS</a>
-  </div>
-
+ 
+  <p></p>
+  <footer>
+    <img class="logo-sm" src="/static/friendly.png">
+    <p></p>
+    <a href="/login">Logout</a>
+    {% block footer %}{% endblock %}
+  </footer>  
+</div>
 {% endblock %}

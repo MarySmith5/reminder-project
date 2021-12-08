@@ -23,7 +23,7 @@ class Customer(db.Model):
 
     def __repr__(self):
         """Show info about a customer"""
-        return f"<Customer id={self.customer_id}, {self.first_name} {self.last_name}, text={self.text_num}, landline={self.landline}, email={self.email}>"
+        return f"ID #{self.customer_id}, {self.first_name} {self.last_name}, text= {self.text_num}"
 
 
     
@@ -54,7 +54,7 @@ class Appointment(db.Model):
     
     def __repr__(self):
         """Show info about an appointment"""
-        return f"< Appointment id={self.appoint_id}, service={self.gen_service}, date={self.date} time={self.time}, CANCELED={self.is_canceled} >"
+        return f"Service= {self.gen_service}, date= {self.date} time= {self.time}, CANCELED= {self.is_canceled}"
 
     def get_readable_time(self):
         t = (self.time)

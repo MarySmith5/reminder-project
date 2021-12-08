@@ -1,99 +1,125 @@
 {% extends 'base.html' %}
+{% block head %}
+<style>
+  body {
+    
+    background: #333 url("/static/woman-gb64cf9f3d_1920.jpg");
+  }
+</style>
+{% endblock %}
 {% block title %}New Appointment{% endblock %}
 
-<body>
 {% block body %}
-<h1>Create a New Appointment</h1>
-<form class="form-new-appointment" method="POST" action="/process_new_appt">
+<div class="sidenavR">
+    {% for msg in get_flashed_messages() %}
+    <p class="flash-msg">
+    {{ msg }}
+    </p>
+    {% endfor %}
+        
+        <body>
+        <form class="form" method="POST" action="/process_new_appt">
+            <h2>New Appointment</h2>
+            <p></p>
+            <div class="form-group">
+                <label for="customer_id">Customer ID:</label>
+                <input id="customer_id" name="customer_id" value="{{customer_id}}" ></input>        
+            </div>
+            <p></p>
+                <div class="form-group">
+                    <label for="gen_service">Service:</label>
+                    <select name="gen_service" id="gen_service">
+                        <option value="hair" >hair</option>
+                        <option value="nail" >nail</option>
+                        <option value="pedicure" >pedicure</option>
+                        <option value="wax" >wax</option>
+                        <option value="facial" >facial</option>
+                        <option value="massage" >massage</option>
+                    </select> 
+                </div>
+                <p></p>
+                <div class="form-group">
+                    <!-- <label for="specific_service-field" class="sr-only">Appointment Notes:</label> -->
+                        <textarea type="specific_service"
+                            name="specific_service"
+                            placeholder="Notes"></textarea>
+                </div>
+                <p></p>
+                <div class="form-group">
+                    <label for="date_field"></label>
+                    <input type="date" id="date" name="date">
+                </div>
+                <p></p>
+                <div class="form-group">
+                    <label for="time"></label>
+                    <input type="time" id="time" name="time">
+                </div>
+                <p></p>
+                <div class="form-group">
+                    <label for="timezone-field" class="sr-only">Timezone:</label>
+                    <select name="timezone" id="timezone">
+                    <option value="US/Pacific">US/Pacific</option>
+                    <option value="US/Mountain">US/Mountain</option>
+                    <option value="US/Central">US/Central</option>
+                    <option value="US/Eastern">US/Eastern</option>
+                    </select>
+                        
+                </div>
+                <p></p>
+                <div class="form-group">
+                    <label for="duration">Duration:</label>
+                    <select name="duration-picker" id="duration">
+                        <option value="00:15">0:15</option>
+                        <option value="00:30">0:30</option>
+                        <option value="00:45">0:45</option>
+                        <option value="01:00">1:00</option>
+                        <option value="01:15">1:15</option>
+                        <option value="01:30">1:30</option>
+                        <option value="01:45">1:45</option>
+                        <option value="02:00">2:00</option>
+                        <option value="02:15">2:15</option>
+                        <option value="02:30">2:30</option>
+                        <option value="02:45">2:45</option>
+                        <option value="03:00">3:00</option>
+                    </select>            
+                </div>
+                <p></p>
+                <div class="form-group">
+                    <label for="greeting">Greeting:</label>
+                    <select name="greeting" id="greeting">
+                        <option value="Good morning &#128144">Good morning! &#128144</option>
+                        <option value="It's time for your &#128135.">It's time for your &#128135.</option>
+                        <option value="&#128133">&#128133</option>
+                        <option value="&#9986">&#9986</option>
+                        <option value="&#10024 Yay! &#10024">&#10024 Yay! &#10024</option>
+                        <option value="&#128515 Hi!">&#128515 Hi!</option>
+                    </select>            
+                </div>
+                <p></p>
+                <div class="form-group">
+                    <label for="closing">Closing:</label>
+                    <select name="closing" id="closing">
+                        <option value="I look forward to seeing you &#129303">I look forward to seeing you &#129303</option>
+                        <option value="You're going to look amazing &#129321">You're going to look amazing &#129321</option>
+                        <option value="&#128567 required">&#128567 required</option>
+                        <option value="Feeling sick &#129298? Let's reschedule.">Feeling sick &#129298? Let's reschedule.</option>
+                        <option value="&#128136">&#128136</option>
+                    </select>  
+                    <p></p>          
+                </div>
+                <button class="btn btn-block btn-secondary fw-bold bg-pink border-white" type="submit">Create Appointment
+                </button>
+        </form>
+        </body>
+        <footer>
+            <img class="logo-sm" src="/static/friendly.png">
+            <p></p>
+            <a href="/login">Logout</a>
+            {% block footer %}{% endblock %}
+        </footer>  
+</div>  
+{% endblock %}  
+</html>
 
-    <h2 class="form-new-appointment-heading">Please Enter the Following Info</h2>
-    <div class="form-group">
-        <p for="customer_id">This is your customer ID:</p>
-            <input id="customer_id" name="customer_id" value="{{customer_id}}" ></input>        
-    </div>
-        <div class="form-group">
-            <label for="gen_service">Choose the type of service:</label>
-                <select name="gen_service" id="gen_service">
-                    <option value="hair" >hair</option>
-                    <option value="nail" >nail</option>
-                    <option value="pedicure" >pedicure</option>
-                    <option value="wax" >wax</option>
-                    <option value="facial" >facial</option>
-                    <option value="massage" >massage</option>
-                </select> 
-        </div>
-        <div class="form-group">
-            <label for="specific_service-field" class="sr-only">Appointment Notes:</label>
-                <textarea type="specific_service"
-                    name="specific_service"
-                    placeholder="notes about service"></textarea>
-        </div>
-        <div class="form-group">
-            <label for="date_field">Date:</label>
-                <input type="date" id="date" name="date">
-        </div>
-        <div class="form-group">
-            <label for="time">Select a time:</label>
-                <input type="time" id="time" name="time">
-        </div>
-        <div class="form-group">
-            <label for="timezone-field" class="sr-only">Timezone</label>
-            <select name="timezone" id="timezone">
-              <option value="US/Pacific">US/Pacific</option>
-              <option value="US/Mountain">US/Mountain</option>
-              <option value="US/Central">US/Central</option>
-              <option value="US/Eastern">US/Eastern</option>
-            </select>
-                   
-          </div>
-        <div class="form-group">
-            <label for="duration">Duration:</label>
-                <select name="duration-picker" id="duration">
-                    <option value="00:15">0:15</option>
-                    <option value="00:30">0:30</option>
-                    <option value="00:45">0:45</option>
-                    <option value="01:00">1:00</option>
-                    <option value="01:15">1:15</option>
-                    <option value="01:30">1:30</option>
-                    <option value="01:45">1:45</option>
-                    <option value="02:00">2:00</option>
-                    <option value="02:15">2:15</option>
-                    <option value="02:30">2:30</option>
-                    <option value="02:45">2:45</option>
-                    <option value="03:00">3:00</option>
-                </select>            
-        </div>
-        <div class="form-group">
-            <label for="greeting">Greeting:</label>
-                <select name="greeting" id="greeting">
-                    <option value="Good morning &#128144">Good morning! &#128144</option>
-                    <option value="It's time for your &#128135.">It's time for your &#128135.</option>
-                    <option value="&#128133">&#128133</option>
-                    <option value="&#9986">&#9986</option>
-                    <option value="&#10024 Yay! &#10024">&#10024 Yay! &#10024</option>
-                    <option value="&#128515 Hi!">&#128515 Hi!</option>
-                </select>            
-        </div>
-        <div class="form-group">
-            <label for="closing">Closing:</label>
-                <select name="closing" id="closing">
-                    <option value="I look forward to seeing you &#129303">I look forward to seeing you &#129303</option>
-                    <option value="You're going to look amazing &#129321">You're going to look amazing &#129321</option>
-                    <option value="&#128567 required">&#128567 required</option>
-                    <option value="Feeling sick &#129298? Let's reschedule.">Feeling sick &#129298? Let's reschedule.</option>
-                    <option value="&#128136">&#128136</option>
-                </select>            
-        </div>
-    </div>
-    <div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Create Appointment
-        </button>
-    </div>
-  
-  </form>
-       
-  </body>
-  </html>
-  
 
-{% endblock %}
+

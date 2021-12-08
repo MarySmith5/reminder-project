@@ -2,7 +2,10 @@
 {% block title %}Cancel an appointment{% endblock %} 
 
 {% block body %}
-  <h1>To make changes to this appointment, you must cancel it and create a new appointment.</h1>
+<div class="dark">
+  <p></p>
+  <h2>To make changes to this appointment, you must cancel it and create a new appointment.</h2>
+    <p></p>
     <p>{{appointment.my_customer.first_name}} {{appointment.my_customer.last_name}}</p>
     <p>{{appointment.gen_service}}</p>
     <p>{{appointment.date}}</p>
@@ -14,14 +17,23 @@
 
     <form class="form-cancel" method="POST" action="/canceled/{{appointment.appoint_id}}">
         
-        <button class="btn btn-lg btn-primary btn-block" type="cancel">Cancel
+        <button class="btn btn-block btn-secondary fw-bold bg-pink border-white" type="cancel">Cancel
         </button>
-    </form>  
+    </form> 
+    <p></p> 
   <div>
     <a href='/add_appointment/{{appointment.customer_id}}'>CLICK HERE TO ADD A NEW APPOINTMENT FOR THIS CUSTOMER</a>
   </div>
+  <p></p>
   <div>
     <a href='/customer_options'>CLICK HERE TO CHANGE CUSTOMERS</a>
   </div>
-
+  <p></p>
+  <footer>
+    <img class="logo-sm" src="/static/friendly.png">
+    <p></p>
+    <a href="/login">Logout</a>
+    {% block footer %}{% endblock %}
+  </footer> 
+</div>
 {% endblock %}

@@ -18,9 +18,8 @@
     <h2>Create a New Customer</h2>
     <body>
     <form class="form" method="POST" action="/new_customer">
-
             <div class="form-group">
-                <label for="first_name-field" class="sr-only">First Name</label>
+                <label for="first_name-field" class="sr-only"></label>
                 <input type="first_name"
                       name="first_name"
                       class="form-control input-lg"
@@ -28,9 +27,9 @@
                       required
                       >
               </div>
-            <p></p>
+            <!-- <p></p> -->
         <div class="form-group">
-          <label for="last_name-field" class="sr-only">Last Name</label>
+          <label for="last_name-field" class="sr-only"></label>
           <input type="last_name"
                 name="last_name"
                 class="form-control input-lg"
@@ -38,26 +37,26 @@
                 required
                 >
         </div>
-        <p></p>
+        <!-- <p></p> -->
         <div class="form-group">
-          <label for="text_num-field" class="sr-only">Text Number</label>
+          <label for="text_num-field" class="sr-only"></label>
           <input type="text_num"
                 name="text_num"
                 class="form-control input-lg"
                 placeholder="text number"
                 >
         </div>
-        <p></p>
+        <!-- <p></p> -->
         <div class="form-group">
-            <label for="landline-field" class="sr-only">Landline</label>
+            <label for="landline-field" class="sr-only"></label>
             <input type="landline"
                   name="landline"
                   class="form-control input-lg"
                   placeholder="landline number">
           </div>
-          <p></p>
+          <!-- <p></p> -->
         <div class="form-group">
-          <label for="email-field" class="sr-only">Email</label>
+          <label for="email-field" class="sr-only"></label>
           <input type="email"
                 name="email"
                 class="form-control input-lg"
@@ -66,15 +65,16 @@
         <p></p>
         <button class="btn btn-block btn-secondary fw-bold bg-pink border-white" type="submit">Create Customer
         </button>
-      
     </form>
-        
     </body>
     <footer>
       <img class="logo-sm" src="/static/friendly.png">
-    </footer>
+      <p></p>
+      <a href="/login">Logout</a>
+      {% block footer %}{% endblock %}
+    </footer>  
 </div>
+{% endblock %}
 </html>
   
 
-{% endblock %}

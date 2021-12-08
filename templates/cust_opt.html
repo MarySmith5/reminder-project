@@ -26,21 +26,21 @@
               
                 <p>Find a customer:</p>
               <div class="form-group">
-                  <label for="first-name-field" class="sr-only">Customer First Name</label>
+                  <label for="first-name-field" class="sr-only"></label>
                   <input type="first_name"
                         name="first_name"
                         class="form-control input-lg"
-                        placeholder="first name"
+                        placeholder="customer first name"
                         required
                         autofocus>
                 </div>
-                <P></P>
+                <!-- <P></P> -->
                 <div class="form-group">
-                  <label for="last-name-field" class="sr-only">Customer Last Name</label>
+                  <label for="last-name-field" class="sr-only"></label>
                   <input type="last_name"
                         name="last_name"
                         class="form-control input-lg"
-                        placeholder="last name"
+                        placeholder="customer last name"
                         required
                         autofocus>
                 </div>
@@ -49,6 +49,9 @@
         </form>
         <footer>
           <img class="logo-sm" src="/static/friendly.png">
+          <p></p>
+          <a href="/login">Logout</a>
+          {% block footer %}{% endblock %}
         </footer>
 </div>
 {% endblock %}

@@ -1,16 +1,28 @@
 {% extends 'base.html' %}
+
 {% block title %}Find Customer{% endblock %} 
 
 {% block body %}
-  <h1>Select a customer to ADD, ALTER or VIEW appointments</h1>
-  
-    <ul>
+<div class="dark">
+  <p></p>
+  <h2>Select a customer to VIEW, ADD, CANCEL appointments</h2>
+  <p></p>
       {% for customer in customers %}
-        <li>
-            <a href="/customers/{{customer.customer_id}}">{{customer}}</a>
-        </li>
+       
+        <p></p>
+        <a href="/customers/{{customer.customer_id}}">{{customer}}</a>
+    
       {% endfor %}
-    </ul>
-  <a href="/new_customer">Add a new customer</a>
+       
+        <p></p>
+        <a href="/new_customer">Add a new customer</a>
+        <p></p>
+        <footer>
+          <img class="logo-sm" src="/static/friendly.png">
+          <p></p>
+          <a href="/login">Logout</a>
+          {% block footer %}{% endblock %}
+        </footer>  
+</div>
 
 {% endblock %}
