@@ -5,6 +5,9 @@
     
     background: #333 url("/static/woman-gb64cf9f3d_1920.jpg");
   }
+  /* option[value=""] {
+    background-color:#ffdee5;
+  } */
 </style>
 {% endblock %}
 {% block title %}New Appointment{% endblock %}
@@ -19,16 +22,19 @@
         
         <body>
         <form class="form" method="POST" action="/process_new_appt">
-            <h2>New Appointment</h2>
+            <font color="#ffdee5">
+                <h2>New Appointment</h2>
+            </font>
             <p></p>
             <div class="form-group">
-                <label for="customer_id">Customer ID:</label>
-                <input id="customer_id" name="customer_id" value="{{customer_id}}" ></input>        
+                <label for="customer_id" class="sr-only">Customer ID:</label>
+                <input id="customer_id" name="customer_id" value="{{customer_id}}" class="form-control input-lg"></input>        
             </div>
             <p></p>
                 <div class="form-group">
-                    <label for="gen_service">Service:</label>
-                    <select name="gen_service" id="gen_service">
+                    <label for="gen_service" class="sr-only"></label>
+                    <select name="gen_service" id="gen_service" class="form-control input-lg" required>
+                        <option class="label" value="" disabled selected hidden>choose a service</option>
                         <option value="hair" >hair</option>
                         <option value="nail" >nail</option>
                         <option value="pedicure" >pedicure</option>
@@ -39,36 +45,39 @@
                 </div>
                 <p></p>
                 <div class="form-group">
-                    <!-- <label for="specific_service-field" class="sr-only">Appointment Notes:</label> -->
+                    <label for="specific_service-field" class="sr-only"></label>
                         <textarea type="specific_service"
                             name="specific_service"
-                            placeholder="Notes"></textarea>
+                            placeholder="Notes"
+                            class="form-control input-lg"></textarea>
                 </div>
                 <p></p>
                 <div class="form-group">
-                    <label for="date_field"></label>
-                    <input type="date" id="date" name="date">
+                    <label for="date_field" class="sr-only"></label>
+                    <input type="date" id="date" name="date" class="form-control input-lg">
                 </div>
                 <p></p>
                 <div class="form-group">
-                    <label for="time"></label>
-                    <input type="time" id="time" name="time">
+                    <label for="time" class="sr-only"></label>
+                    <input type="time" id="time" name="time" class="form-control input-lg">
                 </div>
                 <p></p>
                 <div class="form-group">
-                    <label for="timezone-field" class="sr-only">Timezone:</label>
-                    <select name="timezone" id="timezone">
-                    <option value="US/Pacific">US/Pacific</option>
-                    <option value="US/Mountain">US/Mountain</option>
-                    <option value="US/Central">US/Central</option>
-                    <option value="US/Eastern">US/Eastern</option>
+                    <label for="timezone-field" class="sr-only"></label>
+                    <select name="timezone" id="timezone" class="form-control input-lg" placeholer="select a timezone" >
+                        <option class="label" value="" disabled selected hidden>choose a timezone</option>
+                        <option value="US/Pacific">US/Pacific</option>
+                        <option value="US/Mountain">US/Mountain</option>
+                        <option value="US/Central">US/Central</option>
+                        <option value="US/Eastern">US/Eastern</option>
                     </select>
                         
                 </div>
                 <p></p>
                 <div class="form-group">
-                    <label for="duration">Duration:</label>
-                    <select name="duration-picker" id="duration">
+                    <label for="duration" class="sr-only"></label>
+                    <select name="duration-picker" id="duration" class="form-control input-lg">
+                        <option class="label" value="" disabled selected hidden>choose duration time</option>
                         <option value="00:15">0:15</option>
                         <option value="00:30">0:30</option>
                         <option value="00:45">0:45</option>
@@ -85,8 +94,9 @@
                 </div>
                 <p></p>
                 <div class="form-group">
-                    <label for="greeting">Greeting:</label>
-                    <select name="greeting" id="greeting">
+                    <label for="greeting" class="sr-only"></label>
+                    <select name="greeting" id="greeting" class="form-control input-lg">
+                        <option class="label" value="" disabled selected hidden>choose a greeting</option>
                         <option value="Good morning &#128144">Good morning! &#128144</option>
                         <option value="It's time for your &#128135.">It's time for your &#128135.</option>
                         <option value="&#128133">&#128133</option>
@@ -97,8 +107,9 @@
                 </div>
                 <p></p>
                 <div class="form-group">
-                    <label for="closing">Closing:</label>
-                    <select name="closing" id="closing">
+                    <label for="closing" class="sr-only"></label>
+                    <select name="closing" id="closing" class="form-control input-lg">
+                        <option class="label" value="" disabled selected hidden>choose a closing</option>
                         <option value="I look forward to seeing you &#129303">I look forward to seeing you &#129303</option>
                         <option value="You're going to look amazing &#129321">You're going to look amazing &#129321</option>
                         <option value="&#128567 required">&#128567 required</option>

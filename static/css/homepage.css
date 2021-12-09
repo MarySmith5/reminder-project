@@ -101,13 +101,13 @@ footer {
     top: 0;
     right: 0;
     background-color: #333;
-    overflow-x: hidden;
+    overflow-x: scroll;
     margin-left: 20px;
     margin-right: 20px;
     padding-left: 20px;
     padding-right: 20px;
-    padding-top: 40px;
-    padding-bottom: 40px;
+    padding-top: 20px;
+    padding-bottom: 20px;
   }
 
   /* .sidenavR body {
@@ -115,12 +115,12 @@ footer {
       color: #333;
   } */
 
-  .sidenavR input select textarea {
-    padding: 8px 8px 8px 8px;
+  .sidenavR input, select, textarea {
+    padding: 2px 8px 2px 16px;
     text-decoration: none;
     font-size: 20px;
-    background-color:  white;
-    border: none;
+    background-color: #ffdee5;
+    outline: none;
     display: block;
   }
 
@@ -128,9 +128,10 @@ footer {
     color:#333;
 } */
 
-.sidenavR input:focus {
-    background-color: white;
-}
+/* .sidenavR input:focus {
+    background-color: #ffdee5;
+    outline-color: white;
+} */
 
 .flash-msg {
     color: #ff5794;
@@ -148,24 +149,39 @@ footer {
     text-decoration: none;
     font-size: 20px;
     background-color: #ffdee5;
-    border : none;
+    outline : none;
     display: block;
   }
 
-  input:focus {
+/* input:focus, select:focus,
+textarea:focus,
+input:active,
+select:active {
     background-color:#ffdee5;
-    border: none;
-  }
+    outline-color: white;
+    box-shadow: 0 0 0 rgb(255, 255, 255);
+    border-color: transparent;
+    border-bottom: 2px solid #ff5794;;
 
-  input {border: none;}
+} */
+
+
+.sidenavR select option[value=""] {
+    background-color:#ffdee5;
+}
+
+option:disabled {
+    background-color:#ffdee5;
+}
+
 
   .sidenav a:hover {
     color: white;
   }
 
-  select:hover {
+  /* select:hover {
       color: white;
-  }
+  } */
 
   a:hover {
     color: white;
