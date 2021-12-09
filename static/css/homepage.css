@@ -110,16 +110,12 @@ footer {
     padding-bottom: 20px;
   }
 
-  /* .sidenavR body {
-
-      color: #333;
-  } */
-
+ 
   .sidenavR input, select, textarea {
     padding: 2px 8px 2px 16px;
     text-decoration: none;
     font-size: 20px;
-    background-color:white
+    background-color:white;
     outline: none;
     display: block;
   }
@@ -179,15 +175,10 @@ option:disabled {
     color: white;
   }
 
-  /* select:hover {
-      color: white;
-  } */
+  
 
   a:hover {
     color: white;
   }
 
-/* li {
-    background-color: #333;
-} */
-  
+
