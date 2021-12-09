@@ -25,14 +25,14 @@ a {
     color: #ffdee5;
 }
 
-/* site-wrapper and site-wrapper-inner are to vertically center content using
-   table/table-cell vertical centering. */
-/* button {
-    color: #ff5794;
-} */
 
 h1 {
     text-align: center;
+}
+
+i {
+    color: #ff5794;
+    font-size: 30px;
 }
 
 .logo-md {
