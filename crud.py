@@ -118,13 +118,14 @@ def create_appointment(customer_id,
 
 def get_appointment(customer_id):
     """Finds and returns appointments by customer"""
-    return Appointment.query.filter_by(customer_id=customer_id).all()
+    
+    return Appointment.query.filter_by(customer_id=customer_id).order_by('date').all()
 
 
 def get_appt_by_id(appoint_id):
     """Finds and returns an appoinment by its id"""
     return Appointment.query.filter_by(appoint_id=appoint_id).one()
-
+    
 
 def get_cust_by_appt_id(appoint_id):
     """Finds and returns a customer id by an appointment id."""
