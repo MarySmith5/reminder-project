@@ -119,7 +119,7 @@ def create_appointment(customer_id,
 def get_appointment(customer_id):
     """Finds and returns appointments by customer"""
     
-    return Appointment.query.filter_by(customer_id=customer_id).order_by('date').all()
+    return Appointment.query.filter_by(customer_id=customer_id).order_by('gen_service').order_by('date').all()
 
 
 def get_appt_by_id(appoint_id):
