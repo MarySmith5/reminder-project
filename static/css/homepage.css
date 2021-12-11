@@ -30,6 +30,27 @@ a {
     font-size: 30px;
 }
 
+.md {
+    font-size: 20px;
+}
+
+/* select:active,
+textarea:active,
+option .label {
+    color: #ffdee5 !important;
+} */
+
+select, textarea, input {
+    background-color: #ffdee5 !important;
+}
+
+/* select option[value=""] {
+    background-color: #ffdee5 !important;
+}
+
+select option:first-child{
+    color: #ffdee5 !important;
+} */
 
 h1 {
     text-align: center;
@@ -120,7 +141,7 @@ footer {
     padding: 2px 8px 2px 16px;
     text-decoration: none;
     font-size: 20px;
-    background-color:white;
+    background-color:#ffdee5;
     outline: none;
     display: block;
   }

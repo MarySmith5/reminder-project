@@ -99,8 +99,8 @@ def get_new_customer():
 @app.route('/new_customer', methods=['POST'])
 def process_new_customer():
     """Creates a new customer"""
-    first_name = request.form.get('first_name')
-    last_name = request.form.get('last_name')
+    first_name = request.form.get('first_name').title()
+    last_name = request.form.get('last_name').title()
     text_num_data = request.form.get('text_num')
 
     if not text_num_data.isdigit() or len(text_num_data) != 10:
@@ -124,8 +124,8 @@ def process_new_customer():
 
 @app.route('/customer_options', methods=['POST'])
 def find_customer():
-    first_name = request.form.get('first_name')
-    last_name = request.form.get('last_name')
+    first_name = request.form.get('first_name').title()
+    last_name = request.form.get('last_name').title()
     customers = crud.get_cust(first_name, last_name)
     if customers:
         return render_template('customers.html', customers=customers)
@@ -145,7 +145,8 @@ def view_customer_appointments(customer_id):
 @app.route("/add_appointment/<customer_id>")
 def create_appt(customer_id):
     """Renders the add_appointment template"""
-    return render_template('add_appointment.html', customer_id=customer_id)
+    name = crud.get_cust_fname(customer_id)
+    return render_template('add_appointment.html', customer_id=customer_id, name=name)
 
 
 @app.route("/process_new_appt", methods=['POST'])

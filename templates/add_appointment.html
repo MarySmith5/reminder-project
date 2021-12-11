@@ -22,13 +22,18 @@
         
         <body>
         <form class="form" method="POST" action="/process_new_appt">
-            <font color="#ffdee5">
+            <!-- <font color="#ffdee5"> -->
                 <h2>New Appointment</h2>
-            </font>
+                <h2>for</h2>
+                <font color="#ff5794">
+                <h2>{{name}}</h2>
+                </font>
+            <!-- </font> -->
             <p></p>
+            
             <div class="form-group">
                 <label for="customer_id" class="sr-only">Customer ID:</label>
-                <input id="customer_id" name="customer_id" value="{{customer_id}}" class="form-control input-lg"></input>        
+                <input id="customer_id" name="customer_id" value="{{customer_id}}" class="form-control input-lg" readonly></input>        
             </div>
             <p></p>
                 <div class="form-group">
@@ -121,6 +126,12 @@
                 <button class="btn btn-block btn-secondary fw-bold bg-pink border-white" type="submit">Create Appointment
                 </button>
         </form>
+        <p></p>
+        <h2>or</h2>
+        <div>
+            <p></p>
+            <a class="md" href='/customer_options'>Click here to CHANGE customers</a>
+          </div>
         </body>
         <footer>
             <img class="logo-sm" src="/static/friendly.png">

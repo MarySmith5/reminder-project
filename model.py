@@ -23,7 +23,7 @@ class Customer(db.Model):
 
     def __repr__(self):
         """Show info about a customer"""
-        return f"ID #{self.customer_id}, {self.first_name} {self.last_name}, text= {self.text_num}"
+        return f"{self.first_name} {self.last_name} ({self.text_num[2:5]}){self.text_num[5:8]}-{self.text_num[8:]}"
 
 
     
