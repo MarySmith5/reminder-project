@@ -117,7 +117,8 @@ def process_new_customer():
         return redirect('/customer_options')
     else:
         customer = crud.create_customer(first_name, last_name, text_num, landline, email)
-        flash(f'{customer} has been added to the database.')
+        number = f"({customer.text_num[2:5]}){customer.text_num[5:8]}-{customer.text_num[8:]}"
+        flash(f'{customer.first_name} {customer.last_name} {number} has been added to the database.')
         return redirect(f'/add_appointment/{customer.customer_id}')
 
 
