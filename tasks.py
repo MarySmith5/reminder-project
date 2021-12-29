@@ -89,7 +89,7 @@ def send_sms_reminder1(appoint_id):
 
 @celery.task
 def send_sms_reminder2(appoint_id):
-    logger.info("Hey" * 20)
+    # logger.info("Hey" * 20)
     now = datetime.utcnow()
     appointment = Appointment.query.filter_by(appoint_id=appoint_id).one()
     if now > appointment.date_time:

@@ -87,8 +87,8 @@ def create_appointment(customer_id,
     tasks.send_sms_reminder_now(appointment.appoint_id)
     now = datetime.utcnow().date()
     
-    print(f"NOW DATE: {now}")
-    print(f"APPOINTMENT DATE: {appointment.date}")
+    # print(f"NOW DATE: {now}")
+    # print(f"APPOINTMENT DATE: {appointment.date}")
     if appointment.is_canceled == False:
         if appointment.date != now:
             tasks.send_sms_reminder1.apply_async(
